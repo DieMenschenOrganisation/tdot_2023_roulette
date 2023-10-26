@@ -1,0 +1,41 @@
+<div id="center">
+  <div id="outer">
+    <div class="outerTable1">
+      <div class="zero elem">0</div>
+      <div class="zero elem">00</div>
+    </div>
+
+    <div class="innerTable">
+      <div class="row" *ngFor="let i of [9].constructor(3); index as x">
+        <div class="elem innerbet" (click)="handleNumberClick($event)" *ngFor="let a of [9].constructor(12); index as y">
+          <div>{{(y + 1) * 3 - x}}</div>
+          <div class="invisible invisible1" (click)="handleInvisible1Click($event)"></div>
+          <div class="invisible invisible2" (click)="handleInvisible2Click($event)" *ngIf="y != 11"></div>
+          <div class="invisible invisible3" (click)="handleInvisible3Click($event)" *ngIf="y != 11"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="elem outbet1">1st 12</div>
+        <div class="elem outbet1">2nd 12</div>
+        <div class="elem outbet1">3rd 12</div>
+      </div>
+
+      <div class="row">
+        <div class="elem outbet2">1 to 18</div>
+        <div class="elem outbet2">EVEN</div>
+        <div class="elem outbet2">RED</div>
+        <div class="elem outbet2">BLACK</div>
+        <div class="elem outbet2">ODD</div>
+        <div class="elem outbet2">19 to 36</div>
+      </div>
+    </div>
+
+    <div class="outerTable2">
+      <div class="twoToOne elem">2 to 1</div>
+      <div class="twoToOne elem">2 to 1</div>
+      <div class="twoToOne elem">2 to 1</div>
+    </div>
+  </div>
+
+</div>

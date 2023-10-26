@@ -1,0 +1,118 @@
+#center {
+  display: flex;
+  justify-content: center;
+}
+
+$outerWidth: 95vw;
+$height: 10vh;
+
+#outer {
+  display: flex;
+  flex-direction: row;
+
+  width: $outerWidth;
+
+  margin: 20px;
+}
+
+.zero {
+  height: calc($height * 1.5)!important;
+}
+
+.row {
+  display: flex;
+}
+
+.innerTable {
+  .elem:not(:last-of-type) {
+    border-top: 2px solid black;
+    border-right: 2px solid black;
+  }
+
+  .elem:last-of-type {
+    border-top: 2px solid black;
+    border-right: 2px solid black;
+  }
+
+  .elem:first-of-type {
+    border-left: 2px solid black;
+  }
+
+  .outbet2 {
+    border-bottom: 2px solid black;
+  }
+}
+
+.outerTable2 {
+  .elem {
+    border-top: 2px solid black;
+    border-right: 2px solid black;
+  }
+
+  .elem:last-of-type {
+    border-bottom: 2px solid black;
+  }
+}
+
+.outerTable1 {
+  .elem {
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+  }
+
+  .elem:last-of-type {
+    border-bottom: 2px solid black;
+  }
+}
+
+.elem {
+  flex: 1;
+
+  font-family: "Arial", serif;
+  font-size: 15px;
+  padding: 4px;
+
+  height: $height;
+  width: calc($outerWidth / 14);
+
+  box-sizing: border-box;
+}
+
+.invisible1 {
+  position: fixed;
+  width: calc($outerWidth / 28);
+  height: calc($height / 2);
+
+  transform: translateY(100%);
+
+  box-sizing: border-box;
+  border: 1px solid red;
+}
+
+.invisible2 {
+  position: fixed;
+  width: calc($outerWidth / 28);
+  height: calc($height / 2);
+
+  transform: translateX(100%);
+
+  box-sizing: border-box;
+  border: 1px solid blue;
+}
+
+.invisible3 {
+  position: fixed;
+  width: calc($outerWidth / 28);
+  height: calc($height / 2);
+
+  transform: translate(100%, 100%);
+
+  box-sizing: border-box;
+  border: 1px solid blueviolet;
+}
+
+.innerbet, .outbet1, .outbet2, .zero, .twoToOne {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
