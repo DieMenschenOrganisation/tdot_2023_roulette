@@ -6,12 +6,12 @@
     </div>
 
     <div class="innerTable">
-      <div class="row" *ngFor="let i of [9].constructor(3); index as x">
-        <div class="elem innerbet" (click)="handleNumberClick($event)" *ngFor="let a of [9].constructor(12); index as y">
+      <div class="row" *ngFor="let i of [].constructor(3); index as x">
+        <div class="elem innerbet" (click)="handleNumberClick($event, ((y + 1) * 3 - x))" *ngFor="let a of [].constructor(12); index as y">
           <div>{{(y + 1) * 3 - x}}</div>
-          <div class="invisible invisible1" (click)="handleInvisible1Click($event)"></div>
-          <div class="invisible invisible2" (click)="handleInvisible2Click($event)" *ngIf="y != 11"></div>
-          <div class="invisible invisible3" (click)="handleInvisible3Click($event)" *ngIf="y != 11"></div>
+          <div class="invisible invisible1" (click)="handleInvisible1Click($event, x, y)"></div>
+          <div class="invisible invisible2" (click)="handleInvisible2Click($event, x, y)" *ngIf="y != 11"></div>
+          <div class="invisible invisible3" (click)="handleInvisible3Click($event, x, y)" *ngIf="y != 11"></div>
         </div>
       </div>
 

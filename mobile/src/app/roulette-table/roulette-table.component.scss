@@ -41,6 +41,7 @@ $height: 10vh;
   .outbet2 {
     border-bottom: 2px solid black;
   }
+
 }
 
 .outerTable2 {
@@ -51,6 +52,8 @@ $height: 10vh;
 
   .elem:last-of-type {
     border-bottom: 2px solid black;
+
+    height: calc($height + 2px)!important;
   }
 }
 
@@ -62,6 +65,8 @@ $height: 10vh;
 
   .elem:last-of-type {
     border-bottom: 2px solid black;
+
+    height: calc($height * 1.5 + 2px)!important;
   }
 }
 
@@ -79,7 +84,7 @@ $height: 10vh;
 }
 
 .invisible1 {
-  position: fixed;
+  position: absolute;
   width: calc($outerWidth / 28);
   height: calc($height / 2);
 
@@ -87,10 +92,12 @@ $height: 10vh;
 
   box-sizing: border-box;
   border: 1px solid red;
+
+  pointer-events: all;
 }
 
 .invisible2 {
-  position: fixed;
+  position: absolute;
   width: calc($outerWidth / 28);
   height: calc($height / 2);
 
@@ -101,7 +108,7 @@ $height: 10vh;
 }
 
 .invisible3 {
-  position: fixed;
+  position: absolute;
   width: calc($outerWidth / 28);
   height: calc($height / 2);
 
