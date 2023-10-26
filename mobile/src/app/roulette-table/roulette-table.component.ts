@@ -9,6 +9,8 @@ export class RouletteTableComponent {
 
   handleNumberClick(event: Event, number: number) {
     console.log(number)
+
+    //todo log for zero, double zero, and merges
   }
 
   handleInvisible1Click(event: Event, x: number, y: number) {
