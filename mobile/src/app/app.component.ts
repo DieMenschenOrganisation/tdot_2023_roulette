@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +6,20 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'mobile';
+  isLandscape: boolean = window.innerWidth > window.innerHeight;
+
+  constructor() { }
+
+  ngOnInit() {
+    this.checkOrientation();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.checkOrientation();
+  }
+
+  checkOrientation() {
+    this.isLandscape = window.innerWidth > window.innerHeight;
+  }
 }

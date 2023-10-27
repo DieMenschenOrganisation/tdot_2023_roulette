@@ -1,1 +1,8 @@
-<app-roulette-table></app-roulette-table>
+<div *ngIf="isLandscape">
+  <app-roulette-table></app-roulette-table>
+  <app-coin></app-coin>
+</div>
+
+<div *ngIf="!isLandscape">
+  <app-blocked></app-blocked>
+</div>

@@ -1,0 +1,20 @@
+<div id="outer">
+  <div id="inner1">
+    <div>
+      <button [class.active]="currentJetonIdx != 0" [disabled]="currentJetonIdx == 0" (click)="previous()">-</button>
+    </div>
+
+    <div class="image-container">
+      <img class="jeton" alt="jeton1" src="{{currentJetonImg}}">
+    </div>
+
+    <div>
+      <button  [class.active]="currentJetonIdx != jetons.length - 1" [disabled]="currentJetonIdx == jetons.length - 1" (click)="next()">+</button>
+    </div>
+  </div>
+
+  <div id="inner2">
+    <button class="active">X</button>
+  </div>
+</div>
+
