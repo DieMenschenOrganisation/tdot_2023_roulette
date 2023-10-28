@@ -6,13 +6,15 @@ import { RouletteTableComponent } from './roulette-table/roulette-table.componen
 import { CoinComponent } from './coin/coin.component';
 import {NgOptimizedImage} from "@angular/common";
 import { BlockedComponent } from './blocked/blocked.component';
+import { JetonComponent } from './jeton/jeton.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RouletteTableComponent,
     CoinComponent,
-    BlockedComponent
+    BlockedComponent,
+    JetonComponent
   ],
   imports: [
     BrowserModule,

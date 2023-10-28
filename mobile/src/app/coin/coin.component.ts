@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {DataService} from "../data.service";
 
 @Component({
   selector: 'app-coin',
@@ -7,11 +8,11 @@ import {Component, OnInit} from '@angular/core';
 })
 export class CoinComponent implements OnInit{
 
+  constructor(public dataService: DataService) {
+  }
+
   jetons: number[] = [1, 5, 10, 25, 50, 100, 500];
   currentJetonIdx: number = 0;
-  currentJeton: number = this.jetons[this.currentJetonIdx];
-
-  currentJetonImg: string = "";
 
   previous() {
     this.currentJetonIdx--;
@@ -24,11 +25,12 @@ export class CoinComponent implements OnInit{
   }
 
   setImgAndVal() {
-    this.currentJeton = this.jetons[this.currentJetonIdx];
-    this.currentJetonImg = "../../assets/jeton" + this.currentJeton + ".png";
+    this.dataService.currentJeton = this.jetons[this.currentJetonIdx];
+
+    this.dataService.currentJetonImg = "../../assets/jeton" + this.dataService.currentJeton + ".png"
   }
 
   ngOnInit(): void {
-    this.currentJetonImg = "../../assets/jeton" + this.currentJeton + ".png";
+    this.dataService.currentJetonImg = "../../assets/jeton" + this.dataService.currentJeton + ".png";
   }
 }
