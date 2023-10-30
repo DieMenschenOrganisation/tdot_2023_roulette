@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppComponent } from './app.component';
 import { RouletteTableComponent } from './roulette-table/roulette-table.component';
 import { CoinComponent } from './coin/coin.component';
@@ -14,7 +13,7 @@ import { JetonComponent } from './jeton/jeton.component';
     RouletteTableComponent,
     CoinComponent,
     BlockedComponent,
-    JetonComponent
+    JetonComponent,
   ],
   imports: [
     BrowserModule,

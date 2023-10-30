@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from "../data.service";
+import {HandleClicksService} from "../jeton/handle-clicks.service";
 
 @Component({
   selector: 'app-coin',
@@ -8,7 +9,7 @@ import {DataService} from "../data.service";
 })
 export class CoinComponent implements OnInit{
 
-  constructor(public dataService: DataService) {
+  constructor(public dataService: DataService, public handleClick: HandleClicksService) {
   }
 
   jetons: number[] = [1, 5, 10, 25, 50, 100, 500];

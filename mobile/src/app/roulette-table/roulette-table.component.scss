@@ -76,7 +76,6 @@ $border-color: white;
 
   font-family: "Arial", serif;
   font-size: 16px;
-  padding: 4px;
   color: white;
 
   height: $height;
@@ -97,6 +96,7 @@ $border-color: white;
   width: calc($outerWidth / 28);
   height: calc($height / 2);
 
+  border: 1px solid blue;
   box-sizing: border-box;
 
   display: flex;
@@ -107,7 +107,7 @@ $border-color: white;
   transform: translate(100%, 100%);
 }
 
-.xx {
+.jetonPlace {
   width: calc($height / 2);
   height: calc($height / 2);
 
