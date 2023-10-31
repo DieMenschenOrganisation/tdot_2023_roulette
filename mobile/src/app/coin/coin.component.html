@@ -2,25 +2,32 @@
 
   <div id="inner1">
     <div>
-      <button [disabled]="currentJetonIdx == 0" (click)="previous()">-</button>
+      <button class="black" [disabled]="currentJetonIdx == 0" (click)="previous()">-</button>
     </div>
 
     <div class="image-container">
-      <app-jeton [jetonAmount]="jetons[currentJetonIdx]"></app-jeton>
+      <app-jeton [bigger]="true" [jetonAmount]="jetons[currentJetonIdx]"></app-jeton>
     </div>
 
     <div>
-      <button [disabled]="currentJetonIdx == jetons.length - 1" (click)="next()">+</button>
+      <button class="black" [disabled]="currentJetonIdx == jetons.length - 1" (click)="next()">+</button>
     </div>
   </div>
 
   <div id="inner2">
-    <button (click)="handleClick.delete()" class="active">X</button>
-  </div>
+    <div class="inner black">
+      <div>Jetons</div>
+      {{dataService.currentMoney}}
+    </div>
 
-  <div id="inner3">
-    <div>Jetons</div>
-    {{dataService.currentMoney}}
+    <div class="inner">
+      <input type="checkbox" id="switch" (change)="handleClick.betweenBetsEnabled = !handleClick.betweenBetsEnabled"/>
+      <label for="switch"></label>
+    </div>
+
+    <div>
+      <button id="del" (click)="handleClick.delete()" class="active black">DEL</button>
+    </div>
   </div>
 
 </div>

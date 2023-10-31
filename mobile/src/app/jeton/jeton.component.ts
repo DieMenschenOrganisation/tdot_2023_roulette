@@ -8,6 +8,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 export class JetonComponent implements OnChanges{
 
   @Input() jetonAmount: number = 0;
+  @Input() bigger: boolean = false;
 
   jeton1: string = "../../assets/jeton1.png";
   jeton5: string = "../../assets/jeton5.png";

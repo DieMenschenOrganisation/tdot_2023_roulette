@@ -7,6 +7,7 @@ import {DataService} from "../data.service";
 export class HandleClicksService {
 
   items: Map<string, Item> = new Map<string, Item>();
+  betweenBetsEnabled: boolean = false;
 
   constructor(private dataService: DataService) {
     for (let i = 0; i < 37; i++) {

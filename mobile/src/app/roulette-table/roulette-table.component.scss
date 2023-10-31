@@ -1,10 +1,11 @@
 $outerWidth: 95vw;
-$height: 10vh;
+$height: 8vh;
 $border-color: white;
 
 #center {
   display: flex;
   justify-content: center;
+  background-color: green;
 }
 
 #outer {
@@ -96,15 +97,11 @@ $border-color: white;
   width: calc($outerWidth / 28);
   height: calc($height / 2);
 
-  border: 1px solid blue;
+  //border: 1px solid blue;
   box-sizing: border-box;
 
   display: flex;
   justify-content: center;
-}
-
-.invisible3 {
-  transform: translate(100%, 100%);
 }
 
 .jetonPlace {
@@ -123,6 +120,13 @@ $border-color: white;
   transform: translateX(100%);
 }
 
+.invisible3 {
+  transform: translate(100%, 100%);
+}
+
+.mark {
+  border: 1px solid blue;
+}
 
 
 .innerbet, .outbet1, .outbet2, .zero, .twoToOne {
@@ -142,4 +146,8 @@ $border-color: white;
 
 .hideText {
   position: absolute;
+}
+
+.inactive {
+  pointer-events: none;
 }

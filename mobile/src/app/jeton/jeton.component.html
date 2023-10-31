@@ -1,4 +1,4 @@
 <div *ngIf="jetonAmount !== 0"  class="image-container">
   <img src="{{activeImg}}" class="custom-image">
-  <div class="number-overlay">{{ jetonAmount }}</div>
+  <div [class.bigger]="bigger" class="number-overlay">{{ jetonAmount }}</div>
 </div>
