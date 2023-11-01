@@ -1,13 +1,19 @@
-#inner1 button {
-  background-color: #349d4c;
+button {
+  height: 35px;
+  width: 35px;
   color: white;
   font-size: 20px;
   font-weight: bold;
-  padding: 10px 20px;
+  padding: 5px;
   border: 1px solid white;
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s;
+}
+
+
+#inner1 button {
+  background-color: #349d4c;
 }
 
 #inner1 button[disabled] {
@@ -22,14 +28,6 @@
 #inner2 {
   button {
     background-color: red;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    padding: 10px 20px;
-    border: 1px solid white;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s;
   }
 
   button:hover {
@@ -38,24 +36,23 @@
 }
 
 .image-container {
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
 }
 
-.black {
-  font-size: 18px;
-  font-weight: bold;
-  color: white!important;
+.white {
+  color: white;
 }
 
 #outer {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-bottom: 30px;
 }
 
-#inner1, #inner2 {
-  height: 90px;
+#inner1, #inner2, #middle {
+  height: 60px;
 
   display: flex;
   align-items: center;
@@ -63,6 +60,17 @@
 
   background-color: #024c02;
   padding: 5px 20px 5px 20px;
+}
+
+#middle {
+  width: 100px;
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+
+  display: flex;
+  flex-direction: column;
 }
 
 #inner1 {
@@ -77,10 +85,6 @@
 
   border-bottom-left-radius: 20px;
   border-top-left-radius: 20px;
-}
-
-#del {
-  font-size: 30px;
 }
 
 .inner {

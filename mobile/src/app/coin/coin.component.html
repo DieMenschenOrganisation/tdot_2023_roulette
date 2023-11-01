@@ -1,7 +1,7 @@
 <div id="outer">
 
   <div id="inner1">
-    <div>
+    <div class="btnOuter">
       <button class="black" [disabled]="currentJetonIdx == 0" (click)="previous()">-</button>
     </div>
 
@@ -9,13 +9,18 @@
       <app-jeton [bigger]="true" [jetonAmount]="jetons[currentJetonIdx]"></app-jeton>
     </div>
 
-    <div>
+    <div class="btnOuter">
       <button class="black" [disabled]="currentJetonIdx == jetons.length - 1" (click)="next()">+</button>
     </div>
   </div>
 
+  <div id="middle">
+    <div>Wartezeit</div>
+    <div>{{handleClick.timeUntilNextRound}} Sekunden</div>
+  </div>
+
   <div id="inner2">
-    <div class="inner black">
+    <div class="inner white">
       <div>Jetons</div>
       {{dataService.currentMoney}}
     </div>
@@ -25,8 +30,8 @@
       <label for="switch"></label>
     </div>
 
-    <div>
-      <button id="del" (click)="handleClick.delete()" class="active black">DEL</button>
+    <div class="btnOuter">
+      <button (click)="handleClick.delete()" class="active black">X</button>
     </div>
   </div>
 

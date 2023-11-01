@@ -8,6 +8,8 @@ export class HandleClicksService {
 
   items: Map<string, Item> = new Map<string, Item>();
   betweenBetsEnabled: boolean = false;
+  isBetweenBetExistent: boolean = false;
+  timeUntilNextRound: number = 15;
 
   constructor(private dataService: DataService) {
     for (let i = 0; i < 37; i++) {
@@ -67,6 +69,7 @@ export class HandleClicksService {
             payoutFactor: 8
           })
         }
+
       }
     }
 
@@ -177,6 +180,7 @@ export class HandleClicksService {
 
       this.add([num1, num2]);
     }
+    this.isBetweenBetExistent = true;
   }
 
   x2(x: number, y: number, event: Event) {
@@ -186,6 +190,7 @@ export class HandleClicksService {
     let num2 = ((y + 2) * 3 - x);
 
     this.add([num1, num2]);
+    this.isBetweenBetExistent = true;
   }
 
   x3(x: number, y: number, event: Event) {
@@ -208,6 +213,7 @@ export class HandleClicksService {
 
       this.add([num1, num2, num3, num4]);
     }
+    this.isBetweenBetExistent = true;
   }
 
   handleInvisible1Click(x: number, y: number, event?: Event): number[] {
@@ -266,6 +272,7 @@ export class HandleClicksService {
     for (let value of this.items.values()) {
       value.jetonAmount = 0;
     }
+    this.isBetweenBetExistent = false;
   }
 
 
