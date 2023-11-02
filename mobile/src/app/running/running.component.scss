@@ -1,0 +1,39 @@
+body {
+  background-color: #1E1E1E;
+  color: #FFF;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.message-container {
+  width: 60vw;
+  height: 60vh;
+  background-color: #583f3f;
+  border: 2px solid #555;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 400px;
+  text-align: center;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #FFD700;
+}
+
+.content {
+  font-size: 18px;
+  margin: 20px 0;
+}
+
+.emphasis {
+  font-size: 20px;
+  color: #FF5733;
+}
+
+.good-luck {
+  font-size: 24px;
+  color: #00FF00;
+}

@@ -1,4 +1,5 @@
 import {Component, HostListener, OnInit} from '@angular/core';
+import {DataService} from "./data.service";
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ export class AppComponent implements OnInit{
 
   isLandscape: boolean = window.innerWidth > window.innerHeight;
 
-  constructor() { }
+  constructor(public dataService: DataService) { }
 
   ngOnInit() {
     this.checkOrientation();

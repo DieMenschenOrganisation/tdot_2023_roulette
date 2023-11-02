@@ -1,3 +1,17 @@
 html, body {
   touch-action: pinch-zoom;
 }
+
+.disabled {
+  pointer-events: none;
+
+  filter: blur(3.5px);
+}
+
+#running {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}

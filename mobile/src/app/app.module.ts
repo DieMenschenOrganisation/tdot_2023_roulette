@@ -6,6 +6,7 @@ import { CoinComponent } from './coin/coin.component';
 import {NgOptimizedImage} from "@angular/common";
 import { BlockedComponent } from './blocked/blocked.component';
 import { JetonComponent } from './jeton/jeton.component';
+import { RunningComponent } from './running/running.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { JetonComponent } from './jeton/jeton.component';
     CoinComponent,
     BlockedComponent,
     JetonComponent,
+    RunningComponent,
   ],
   imports: [
     BrowserModule,

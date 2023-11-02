@@ -14,9 +14,15 @@
     </div>
   </div>
 
-  <div id="middle">
-    <div>Wartezeit</div>
-    <div>{{handleClick.timeUntilNextRound}} Sekunden</div>
+  <div *ngIf="!dataService.running" class="middle">
+    <div>remaining</div>
+    <div>time</div>
+    <div>{{dataService.remainingTime}} seconds</div>
+  </div>
+
+  <div  *ngIf="dataService.running" class="middle">
+    <div>game</div>
+    <div>running</div>
   </div>
 
   <div id="inner2">

@@ -51,7 +51,7 @@ button {
   padding-bottom: 30px;
 }
 
-#inner1, #inner2, #middle {
+#inner1, #inner2, .middle {
   height: 60px;
 
   display: flex;
@@ -62,7 +62,7 @@ button {
   padding: 5px 20px 5px 20px;
 }
 
-#middle {
+.middle {
   width: 100px;
   border-radius: 20px;
   font-size: 15px;
@@ -134,3 +134,5 @@ input:checked + label:after {
 label:active:after {
   width: 32.5px;
 }
+
+

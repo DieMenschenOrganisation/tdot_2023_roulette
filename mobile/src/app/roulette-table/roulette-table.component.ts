@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {HandleClicksService} from "../jeton/handle-clicks.service";
+import {DataService} from "../data.service";
 
 @Component({
   selector: 'app-roulette-table',
@@ -8,7 +9,7 @@ import {HandleClicksService} from "../jeton/handle-clicks.service";
 })
 export class RouletteTableComponent {
 
-  constructor(public handleClick: HandleClicksService) {
+  constructor(public handleClick: HandleClicksService, public dataService: DataService) {
   }
 
   redNumbers: number[] = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
