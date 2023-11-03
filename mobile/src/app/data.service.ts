@@ -8,7 +8,7 @@ import {Item} from "./jeton/handle-clicks.service";
 export class DataService {
 
   constructor() {
-    this.socket = connect("http://192.168.0.107:3000");
+    this.socket = connect("http://localhost:3000");
 
     this.socket.on("joined", (message: { message: string }) => {
       console.log(message.message);

@@ -1,3 +1,3 @@
 import {RouterMobile} from "./mobile/router.mobile";
 
-new RouterMobile()
+export let router = new RouterMobile()
