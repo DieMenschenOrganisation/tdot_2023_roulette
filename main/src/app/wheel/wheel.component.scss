@@ -1,0 +1,18 @@
+div {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#inner, #ball {
+  position: absolute;
+}
+
+#ball {
+  width: 18px;
+  z-index: 10;
+
+  transform: rotateZ(0.5deg) translateY(-130px);
+}
+
