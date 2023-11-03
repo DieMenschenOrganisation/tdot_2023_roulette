@@ -1,34 +1,49 @@
 import {ErrorMSG, Success} from "./utils";
-import {RouterMobile} from "./router.mobile";
 import {router} from "../index";
-import e from "express";
 
-export class StoreMobile {
+export class ServiceMobile {
 
-    private static instanz: StoreMobile;
-    public static getInstanz(): StoreMobile {
+    private static instanz: ServiceMobile;
+
+    public static getInstanz(): ServiceMobile {
         if (this.instanz == undefined) {
-            this.instanz = new StoreMobile();
+            this.instanz = new ServiceMobile();
         }
 
         return this.instanz;
     }
 
     private _items: Map<string, Map<string, Item>> = new Map<string, Map<string, Item>>();
-    private _money: Map<string, number> = new Map<string, number>;
+    private _money: Map<string, { money: number, ws: any }> = new Map<string, { money: number, ws: any }>;
+
+    private _serverWS: any;
+
+    get serverWS() {
+        return this._serverWS;
+    }
+
+    set serverWS(value: any) {
+        this._serverWS = value;
+    }
+
+    get money(): Map<string, { money: number; ws: any }> {
+        return this._money;
+    }
+
+    set money(value: Map<string, { money: number; ws: any }>) {
+        this._money = value;
+    }
 
     get items(): Map<string, Map<string, Item>> {
         return this._items;
     }
-    get money(): Map<string, number> {
-        return this._money;
-    }
 
-    login(name: string) {
+
+    login(name: string, ws: any) {
         if (this.items.has(name)) return ErrorMSG.playerAlreadyExists;
 
         this.items.set(name, this.initItems());
-        this.money.set(name, 1200);
+        this.money.set(name, {money: 1200, ws: ws});
     }
 
     private initItems(): Map<string, Item> {
@@ -45,7 +60,11 @@ export class StoreMobile {
                     let num2 = ((y + 1) * 3 - (x - 1));
                     let num3 = ((y + 1) * 3 - (x - 2));
 
-                    map.set([num1, num2, num3].toString(), {values: [num1, num2, num3], jetonAmount: 0, payoutFactor: 11})
+                    map.set([num1, num2, num3].toString(), {
+                        values: [num1, num2, num3],
+                        jetonAmount: 0,
+                        payoutFactor: 11
+                    })
                 } else {
                     let num1 = ((y + 1) * 3 - x);
                     let num2 = ((y + 1) * 3 - (x + 1));
@@ -170,7 +189,7 @@ export class StoreMobile {
             let amount = value.jetonAmount;
             amount += value.jetonAmount * value.payoutFactor;
 
-            this.money.set(name, this.money.get(name)! + amount);
+            this.money.get(name)!.money += amount;
         }
     }
 
@@ -180,7 +199,7 @@ export class StoreMobile {
         if (this.getMoneyOfPlayer(name) < amount) return ErrorMSG.notEnoughMoney;
 
         this.items.get(name)!.get(itemName)!.jetonAmount += amount;
-        this.money.set(name, this.money.get(name)! - amount)
+        this.money.get(name)!.money -= amount;
 
         console.log(this.money.get(name))
 
@@ -188,11 +207,12 @@ export class StoreMobile {
     }
 
     getMoneyOfPlayer(name: string): number {
-        return this.money.get(name) == undefined ? 0 : this.money.get(name)!;
+        return this.money.get(name) == undefined ? 0 : this.money.get(name)!.money;
     }
 
 
     remainingTime: number = 0;
+
     async countdownAndDoSomething() {
         while (true) {
             for (let i = 30; i >= 0; i--) {
@@ -207,22 +227,29 @@ export class StoreMobile {
             router.socketIO.emit("running");
 
             let randNum = this.getRandomNumber(0, 36);
-
             console.log(randNum);
+
+            if (this.serverWS != undefined) {
+                this.serverWS.emit("number", (randNum))
+            } else {
+                console.log("error")
+            }
 
             for (let key of this.items.keys()) {
                 this.payout(key, randNum);
                 this.items.set(key, this.initItems())
-                //todo send money to player
-                //todo send cleard map top player
+
+                console.log(this.money.get(key)!.ws)
+                this.money.get(key)!.ws.emit("roundEnd", this.money.get(key)!.money)
                 //todo jonas backend anfragen
             }
 
-            await new Promise(resolve => setTimeout(resolve, 15000));
+            await new Promise(resolve => setTimeout(resolve, 6500));
 
             router.socketIO.emit("runnable");
         }
     }
+
     getRandomNumber(min: number, max: number): number {
         const randomDecimal = Math.random();
 

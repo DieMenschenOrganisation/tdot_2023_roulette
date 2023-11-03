@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import {Server} from "socket.io";
 import {ErrorMSG, Success} from "./utils";
-import {StoreMobile} from "./store.mobile";
+import {ServiceMobile} from "./service.mobile";
 
 export class RouterMobile {
     app = express();
@@ -13,23 +13,27 @@ export class RouterMobile {
 
     constructor() {
         this.app.use(cors());
-        StoreMobile.getInstanz().countdownAndDoSomething().then();
+        ServiceMobile.getInstanz().countdownAndDoSomething().then();
 
         this.socketIO.on("connection", (ws) => {
             console.log("connected: " + ws);
             ws.emit("joined", {message: "user connected successfully"})
 
+            ws.on("server", () => {
+                ServiceMobile.getInstanz().serverWS = ws;
+            })
+
             ws.on("initData", (name: { name: string }) => {
-                StoreMobile.getInstanz().login(name.name);
+                ServiceMobile.getInstanz().login(name.name, ws);
 
                 ws.emit("startData", ({
-                    money: StoreMobile.getInstanz().getMoneyOfPlayer(name.name),
-                    remainingTime: StoreMobile.getInstanz().remainingTime
+                    money: ServiceMobile.getInstanz().getMoneyOfPlayer(name.name),
+                    remainingTime: ServiceMobile.getInstanz().remainingTime
                 }));
             })
 
             ws.on("add", (data: { name: string, itemName: string, amount: number }) => {
-                let status = StoreMobile.getInstanz().add(data.name, data.itemName, data.amount);
+                let status = ServiceMobile.getInstanz().add(data.name, data.itemName, data.amount);
 
                 if (status == ErrorMSG.notEnoughMoney) ws.emit("error", ErrorMSG.notEnoughMoney);
                 if (status == ErrorMSG.error) ws.emit("error", ErrorMSG.error);
