@@ -15,9 +15,21 @@ export class AppComponent {
 
     this.socket.emit("server");
 
-    this.socket.on("number", (number: number) => {
-      console.log(number)
-      this.spinWheel(number);
+    this.socket.on("number", (data: {randNum: number, items: any}) => {
+      console.log(data.randNum)
+
+      const receivedData = JSON.parse(data.items);
+
+      const map = new Map(
+        Array.from(receivedData, ([outerKey, innerArray]) => {
+          const innerMap = new Map(innerArray);
+          return [outerKey, innerMap];
+        })
+      );
+
+      console.log(map)
+
+      this.spinWheel(data.randNum);
     })
   }
 

@@ -28,6 +28,11 @@ export class DataService {
       this.currentMoney -= data.amount;
     })
 
+    this.socket.on("deleted", (money: number) => {
+      this.currentMoney = money;
+      this.items = this.getItems();
+    })
+
     this.socket.on("roundEnd", (money: number) => {
       console.log(money)
 

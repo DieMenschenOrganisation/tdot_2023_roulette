@@ -204,6 +204,21 @@ export class ServiceMobile {
         return Success.success;
     }
 
+    delete(name: string) {
+        if (!this.items.has(name)) return ErrorMSG.playerNotExists;
+
+        let money = 0;
+
+        for (let value of this.items.get(name)!.values()) {
+            money += value.jetonAmount;
+            value.jetonAmount = 0;
+        }
+
+        console.log(money)
+
+        this.money.get(name)!.money += money;
+    }
+
     getMoneyOfPlayer(name: string): number {
         return this.money.get(name) == undefined ? 0 : this.money.get(name)!.money;
     }
@@ -228,7 +243,14 @@ export class ServiceMobile {
             console.log("Zufallszahl: " + randNum);
 
             if (this.serverWS != undefined) {
-                this.serverWS.emit("number", (randNum))
+                const data = Array.from(this.items, ([outerKey, innerMap]) => {
+                    const innerArray = Array.from(innerMap, ([innerKey, item]) => {
+                        return [innerKey, item];
+                    });
+                    return [outerKey, innerArray];
+                });
+
+                this.serverWS.emit("number", {randNum: randNum, items: JSON.stringify(data)})
             } else {
                 console.log("server ist nicht online")
             }

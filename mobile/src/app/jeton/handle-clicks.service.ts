@@ -136,12 +136,10 @@ export class HandleClicksService {
   }
 
   delete() {
-    for (let value of this.dataService.items.values()) {
-      value.jetonAmount = 0;
-    }
+    this.dataService.socket.emit("delete", (this.dataService.name));
+
     this.isBetweenBetExistent = false;
   }
-
 
 }
 

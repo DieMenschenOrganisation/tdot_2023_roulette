@@ -4,6 +4,7 @@ import cors from 'cors';
 import {Server} from "socket.io";
 import {ErrorMSG, Success} from "./utils";
 import {ServiceMobile} from "./service.mobile";
+import path from "path";
 
 export class RouterMobile {
     app = express();
@@ -13,6 +14,19 @@ export class RouterMobile {
 
     constructor() {
         this.app.use(cors());
+
+        this.app.use(express.static(path.join(__dirname, '/../../../mobile/dist/mobile')));
+        this.app.get('/', (req, res) => {
+            res.sendFile(path.join(__dirname, '/../../../mobile/dist/mobile/index.html'));
+            res.end()
+        });
+
+        this.app.use(express.static(path.join(__dirname, '/../../../main/dist/main')));
+        this.app.get('/main', (req, res) => {
+            res.sendFile(path.join(__dirname, '/../../../main/dist/main/index.html'));
+            res.end()
+        });
+
         ServiceMobile.getInstanz().countdownAndDoSomething().then();
 
         this.socketIO.on("connection", (ws) => {
@@ -31,6 +45,13 @@ export class RouterMobile {
                     money: ServiceMobile.getInstanz().getMoneyOfPlayer(name.name),
                     remainingTime: ServiceMobile.getInstanz().remainingTime
                 }));
+            })
+
+            ws.on("delete", (name: string) => {
+                console.log("del")
+                ServiceMobile.getInstanz().delete(name);
+
+                ws.emit("deleted", (ServiceMobile.getInstanz().getMoneyOfPlayer(name)))
             })
 
             ws.on("add", (data: { name: string, itemName: string, amount: number }) => {
