@@ -1,5 +1,6 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import {DataService} from "./data.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -10,9 +11,21 @@ export class AppComponent implements OnInit{
 
   isLandscape: boolean = window.innerWidth > window.innerHeight;
 
-  constructor(public dataService: DataService) { }
+  constructor(public dataService: DataService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      const name = params["name"];
+
+      if (name) {
+        console.log("name:" + name);
+
+        this.dataService.name = name;
+
+        this.dataService.start();
+      }
+    })
+
     this.checkOrientation();
   }
 

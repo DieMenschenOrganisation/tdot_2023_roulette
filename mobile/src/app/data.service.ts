@@ -7,7 +7,7 @@ import {Item} from "./jeton/handle-clicks.service";
 })
 export class DataService {
 
-  constructor() {
+  start() {
     this.socket = connect("http://localhost:3000");
 
     this.socket.on("joined", (message: { message: string }) => {
@@ -26,12 +26,10 @@ export class DataService {
     this.socket.on("added", (data: {itemName: string, amount: number}) => {
       this.items.get(data.itemName)!.jetonAmount += data.amount;
       this.currentMoney -= data.amount;
-
-      console.log(this.items.get(data.itemName)?.jetonAmount)
     })
 
     this.socket.on("roundEnd", (money: number) => {
-      console.log("hallo")
+      console.log(money)
 
       this.currentMoney = money;
       this.items = this.getItems();
@@ -43,12 +41,10 @@ export class DataService {
 
     this.socket.on("running", () => {
       this.running = true;
-      console.log(this.running)
     })
 
     this.socket.on("runnable", () => {
       this.running = false;
-      console.log(this.running)
     })
 
     this.socket.on("error", (error: ErrorMSG) => {
@@ -56,11 +52,11 @@ export class DataService {
     })
   }
 
-  socket: Socket;
+  socket!: Socket;
 
   items: Map<string, Item> = new Map<string, Item>();
 
-  name: string = "huff";
+  name: string = "";
 
   currentJetonImg: string = "";
   currentJeton: number = 1;

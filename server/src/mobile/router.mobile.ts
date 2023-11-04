@@ -24,6 +24,7 @@ export class RouterMobile {
             })
 
             ws.on("initData", (name: { name: string }) => {
+                console.log(name)
                 ServiceMobile.getInstanz().login(name.name, ws);
 
                 ws.emit("startData", ({

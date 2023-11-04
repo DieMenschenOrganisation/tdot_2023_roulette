@@ -1,4 +1,4 @@
-import {ErrorMSG, Success} from "./utils";
+import {ErrorMSG, Success, WebSocket} from "./utils";
 import {router} from "../index";
 
 export class ServiceMobile {
@@ -14,7 +14,7 @@ export class ServiceMobile {
     }
 
     private _items: Map<string, Map<string, Item>> = new Map<string, Map<string, Item>>();
-    private _money: Map<string, { money: number, ws: any }> = new Map<string, { money: number, ws: any }>;
+    private _money: Map<string, { money: number, ws: WebSocket }> = new Map<string, { money: number, ws: WebSocket }>;
 
     private _serverWS: any;
 
@@ -22,15 +22,15 @@ export class ServiceMobile {
         return this._serverWS;
     }
 
-    set serverWS(value: any) {
+    set serverWS(value: WebSocket) {
         this._serverWS = value;
     }
 
-    get money(): Map<string, { money: number; ws: any }> {
+    get money(): Map<string, { money: number; ws: WebSocket }> {
         return this._money;
     }
 
-    set money(value: Map<string, { money: number; ws: any }>) {
+    set money(value: Map<string, { money: number; ws: WebSocket }>) {
         this._money = value;
     }
 
@@ -201,8 +201,6 @@ export class ServiceMobile {
         this.items.get(name)!.get(itemName)!.jetonAmount += amount;
         this.money.get(name)!.money -= amount;
 
-        console.log(this.money.get(name))
-
         return Success.success;
     }
 
@@ -227,19 +225,19 @@ export class ServiceMobile {
             router.socketIO.emit("running");
 
             let randNum = this.getRandomNumber(0, 36);
-            console.log(randNum);
+            console.log("Zufallszahl: " + randNum);
 
             if (this.serverWS != undefined) {
                 this.serverWS.emit("number", (randNum))
             } else {
-                console.log("error")
+                console.log("server ist nicht online")
             }
 
             for (let key of this.items.keys()) {
-                this.payout(key, randNum);
+                this.payout(key, randNum)
                 this.items.set(key, this.initItems())
 
-                console.log(this.money.get(key)!.ws)
+                console.log("geld gesendet an: " + key)
                 this.money.get(key)!.ws.emit("roundEnd", this.money.get(key)!.money)
                 //todo jonas backend anfragen
             }

@@ -1,14 +1,15 @@
-<div [class.disabled]="dataService.running" *ngIf="isLandscape">
-  <app-roulette-table></app-roulette-table>
-  <app-coin></app-coin>
-</div>
+<div *ngIf="isLandscape">
+  <div [class.disabled]="dataService.running" >
+    <app-roulette-table></app-roulette-table>
+    <app-coin></app-coin>
+  </div>
 
-<div id="running" *ngIf="dataService.running && isLandscape">
-  <app-running></app-running>
+  <div id="running" *ngIf="dataService.running">
+    <app-running></app-running>
+  </div>
+
 </div>
 
 <div *ngIf="!isLandscape">
   <app-blocked></app-blocked>
 </div>
-
-<!--<app-running></app-running>-->
