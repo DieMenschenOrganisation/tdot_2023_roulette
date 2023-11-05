@@ -29,6 +29,8 @@ export class RouterMobile {
 
             ws.on("server", () => {
                 ServiceMobile.getInstanz().serverWS = ws;
+
+                //todo on connect send fullMap
             })
 
             ws.on("initData", (name: { name: string }) => {
@@ -37,6 +39,7 @@ export class RouterMobile {
 
                 ws.emit("startData", ({
                     money: ServiceMobile.getInstanz().getMoneyOfPlayer(name.name),
+                    items: JSON.stringify(Array.from(ServiceMobile.getInstanz().items.get(name.name)!.entries())),
                     remainingTime: ServiceMobile.getInstanz().remainingTime
                 }));
             })

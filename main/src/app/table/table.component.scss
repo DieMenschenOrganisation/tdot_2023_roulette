@@ -100,14 +100,6 @@ $border-color: white;
   justify-content: center;
 }
 
-.bigger {
-  width: calc($height) !important;
-  height: calc($height) !important;
-
-  padding: 8px;
-  box-sizing: border-box;
-}
-
 .jetonPlace {
   width: calc($height / 2);
   height: calc($height / 2);

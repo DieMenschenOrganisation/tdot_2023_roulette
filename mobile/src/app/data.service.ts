@@ -17,9 +17,10 @@ export class DataService {
       this.socket.emit("initData", {name: this.name});
     })
 
-    this.socket.on("startData", (data: {money: number, remainingTime: number}) => {
+    this.socket.on("startData", (data: {money: number, items: any, remainingTime: number}) => {
       this.currentMoney = data.money;
       this.remainingTime = data.remainingTime;
+      this.items = new Map(JSON.parse(data.items));
 
       if (this.remainingTime == 0) this.running = true;
     })

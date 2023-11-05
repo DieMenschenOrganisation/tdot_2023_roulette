@@ -37,9 +37,14 @@ export class ServiceMobile {
 
 
     login(name: string, ws: WebSocket) {
-        this.items.set(name, this.initItems());
-
-        this.money.set(name, {money: 1200, ws: ws});
+        if (!this.items.has(name)) {
+            this.items.set(name, this.initItems());
+            this.money.set(name, {money: 1200, ws: ws});
+            //todo money from jonas
+        } else {
+            this.money.set(name, {money: this.money.get(name)!.money, ws: ws})
+            //todo money from jonas
+        }
     }
 
     private initItems(): Map<string, Item> {
@@ -186,6 +191,7 @@ export class ServiceMobile {
             amount += value.jetonAmount * value.payoutFactor;
 
             this.money.get(name)!.money += amount;
+            //todo money to jonas
         }
     }
 
@@ -196,6 +202,7 @@ export class ServiceMobile {
 
         this.items.get(name)!.get(itemName)!.jetonAmount += amount;
         this.money.get(name)!.money -= amount;
+        //todo money from jonas
 
         if (this.serverWS != undefined) this.itemToMain(itemName, amount);
 
@@ -217,10 +224,12 @@ export class ServiceMobile {
         }
 
         this.money.get(name)!.money += money;
+        //todo money to jonas
     }
 
     getMoneyOfPlayer(name: string): number {
         return this.money.get(name) == undefined ? 0 : this.money.get(name)!.money;
+        //todo money from jonas
     }
 
 
@@ -253,8 +262,6 @@ export class ServiceMobile {
                 console.log("geld gesendet an: " + key)
 
                 this.money.get(key)!.ws.emit("roundEnd", this.money.get(key)!.money)
-
-                //todo jonas backend anfragen
             }
 
             if (this.serverWS != undefined) this.serverWS.emit("end");
