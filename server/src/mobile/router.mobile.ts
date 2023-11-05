@@ -15,22 +15,16 @@ export class RouterMobile {
     constructor() {
         this.app.use(cors());
 
-        this.app.use(express.static(path.join(__dirname, '/../../../mobile/dist/mobile')));
-        this.app.get('/', (req, res) => {
-            res.sendFile(path.join(__dirname, '/../../../mobile/dist/mobile/index.html'));
-            res.end()
-        });
+        this.app.use("/mobile", express.static(path.join(__dirname, '/../../../mobile/dist/mobile')));
+        this.app.use("/main", express.static(path.join(__dirname, '/../../../main/dist/main')));
 
-        this.app.use(express.static(path.join(__dirname, '/../../../main/dist/main')));
-        this.app.get('/main', (req, res) => {
-            res.sendFile(path.join(__dirname, '/../../../main/dist/main/index.html'));
-            res.end()
-        });
+        this.app.use("/assets", express.static(path.join(__dirname, "/../../../assets")))
 
         ServiceMobile.getInstanz().countdownAndDoSomething().then();
 
         this.socketIO.on("connection", (ws) => {
-            console.log("connected: " + ws);
+            console.log("connected: " + ws.id);
+
             ws.emit("joined", {message: "user connected successfully"})
 
             ws.on("server", () => {
@@ -59,7 +53,9 @@ export class RouterMobile {
 
                 if (status == ErrorMSG.notEnoughMoney) ws.emit("error", ErrorMSG.notEnoughMoney);
                 if (status == ErrorMSG.error) ws.emit("error", ErrorMSG.error);
-                if (status == Success.success) ws.emit("added", ({itemName: data.itemName, amount: data.amount}))
+                if (status == Success.success) {
+                    ws.emit("added", ({itemName: data.itemName, amount: data.amount}))
+                }
             })
 
         })

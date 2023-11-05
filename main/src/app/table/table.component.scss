@@ -1,0 +1,152 @@
+$height: 8vh;
+$outerWidth: calc($height * 14);
+$border-color: white;
+
+#center {
+  display: flex;
+  justify-content: center;
+  background-color: green;
+}
+
+#outer {
+  display: flex;
+  flex-direction: row;
+
+  width: $outerWidth;
+
+  margin: 20px;
+}
+
+.zero {
+  height: calc($height * 3) !important;
+}
+
+.row {
+  display: flex;
+}
+
+.innerTable {
+  .elem:not(:last-of-type) {
+    border-top: 2px solid $border-color;
+    border-right: 2px solid $border-color;
+  }
+
+  .elem:last-of-type {
+    border-top: 2px solid $border-color;
+    border-right: 2px solid $border-color;
+  }
+
+  .elem:first-of-type {
+    border-left: 2px solid $border-color;
+  }
+
+  .outbet2 {
+    border-bottom: 2px solid $border-color;
+  }
+
+}
+
+.outerTable2 {
+  .elem {
+    border-top: 2px solid $border-color;
+    border-right: 2px solid $border-color;
+  }
+
+  .elem:last-of-type {
+    border-bottom: 2px solid $border-color;
+
+    height: calc($height + 2px) !important;
+  }
+}
+
+.outerTable1 {
+  .elem {
+    border-top: 2px solid $border-color;
+    border-left: 2px solid $border-color;
+  }
+
+  .elem:last-of-type {
+    border-bottom: 2px solid $border-color;
+
+    height: calc($height * 3 + 2px) !important;
+  }
+}
+
+.elem {
+  flex: 1;
+
+  font-family: "Arial", serif;
+  font-size: 16px;
+  color: white;
+
+  height: $height;
+  width: $height;
+
+  box-sizing: border-box;
+}
+
+
+
+.invisible {
+  position: absolute;
+
+  width: calc($outerWidth / 28);
+  height: calc($height / 2);
+
+  //border: 1px solid blue;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+}
+
+.bigger {
+  width: calc($height) !important;
+  height: calc($height) !important;
+
+  padding: 2.5px;
+  box-sizing: border-box;
+}
+
+.jetonPlace {
+  width: calc($height / 2);
+  height: calc($height / 2);
+
+  z-index: 1;
+}
+
+
+.invisible1 {
+  transform: translateY(100%);
+}
+
+.invisible2 {
+  transform: translateX(100%);
+}
+
+.invisible3 {
+  transform: translate(100%, 100%);
+}
+
+.mark {
+  border: 1px solid blue;
+}
+
+
+.innerbet, .outbet1, .outbet2, .zero, .twoToOne {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.red {
+  background-color: red;
+}
+
+.black {
+  background-color: black;
+}
+
+.hideText {
+  position: absolute;
+}

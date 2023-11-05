@@ -1,5 +1,6 @@
 import {ErrorMSG, Success, WebSocket} from "./utils";
 import {router} from "../index";
+import {RouterMobile} from "./router.mobile";
 
 export class ServiceMobile {
 
@@ -30,19 +31,15 @@ export class ServiceMobile {
         return this._money;
     }
 
-    set money(value: Map<string, { money: number; ws: WebSocket }>) {
-        this._money = value;
-    }
 
     get items(): Map<string, Map<string, Item>> {
         return this._items;
     }
 
 
-    login(name: string, ws: any) {
-        if (this.items.has(name)) return ErrorMSG.playerAlreadyExists;
-
+    login(name: string, ws: WebSocket) {
         this.items.set(name, this.initItems());
+
         this.money.set(name, {money: 1200, ws: ws});
     }
 
@@ -201,6 +198,15 @@ export class ServiceMobile {
         this.items.get(name)!.get(itemName)!.jetonAmount += amount;
         this.money.get(name)!.money -= amount;
 
+        const data = Array.from(this.items, ([outerKey, innerMap]) => {
+            const innerArray = Array.from(innerMap, ([innerKey, item]) => {
+                return [innerKey, item];
+            });
+            return [outerKey, innerArray];
+        });
+
+        this.serverWS.emit("table", {items: JSON.stringify(data)})
+
         return Success.success;
     }
 
@@ -213,8 +219,6 @@ export class ServiceMobile {
             money += value.jetonAmount;
             value.jetonAmount = 0;
         }
-
-        console.log(money)
 
         this.money.get(name)!.money += money;
     }
@@ -243,14 +247,7 @@ export class ServiceMobile {
             console.log("Zufallszahl: " + randNum);
 
             if (this.serverWS != undefined) {
-                const data = Array.from(this.items, ([outerKey, innerMap]) => {
-                    const innerArray = Array.from(innerMap, ([innerKey, item]) => {
-                        return [innerKey, item];
-                    });
-                    return [outerKey, innerArray];
-                });
-
-                this.serverWS.emit("number", {randNum: randNum, items: JSON.stringify(data)})
+                this.serverWS.emit("number", {randNum: randNum})
             } else {
                 console.log("server ist nicht online")
             }
@@ -260,12 +257,14 @@ export class ServiceMobile {
                 this.items.set(key, this.initItems())
 
                 console.log("geld gesendet an: " + key)
+
                 this.money.get(key)!.ws.emit("roundEnd", this.money.get(key)!.money)
                 //todo jonas backend anfragen
             }
 
             await new Promise(resolve => setTimeout(resolve, 6500));
 
+            this.serverWS.emit("end");
             router.socketIO.emit("runnable");
         }
     }

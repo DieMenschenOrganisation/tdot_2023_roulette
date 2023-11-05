@@ -1,0 +1,47 @@
+div {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.blur {
+  filter: blur(2px);
+}
+
+app-wheel {
+  z-index: 10;
+}
+
+.roulette-table {
+  display: flex;
+  justify-content: space-between;
+}
+
+.innen-wetten, .aussen-wetten {
+  margin: 10px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+.auszahlung {
+  text-align: center;
+}
+
+.franzoesisch {
+  text-align: center;
+  font-style: italic;
+}
