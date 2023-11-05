@@ -9,15 +9,6 @@ export class DataService {
     this.items = this.getItems();
   }
 
-  split(map: Map<string, Map<string, Item>>) {
-    for (const [outerKey, innerMap] of map) {
-      for (const [innerKey, item] of innerMap) {
-        console.log(innerKey)
-        this.items.get(innerKey)!.jetonAmount += item.jetonAmount;
-      }
-    }
-  }
-
   delete() {
     this.items = this.getItems();
   }

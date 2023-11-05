@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {connect, Socket} from "socket.io-client";
 import {Item} from "./jeton/handle-clicks.service";
+import {environment} from "../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import {Item} from "./jeton/handle-clicks.service";
 export class DataService {
 
   start() {
-    this.socket = connect("http://localhost:3000");
+    this.socket = connect(environment.apiURL);
 
     this.socket.on("joined", (message: { message: string }) => {
       console.log(message.message);

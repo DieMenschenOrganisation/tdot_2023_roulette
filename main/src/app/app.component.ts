@@ -2,6 +2,7 @@ import {Component, ViewChild} from '@angular/core';
 import {WheelComponent} from "./wheel/wheel.component";
 import {connect, Socket} from "socket.io-client";
 import {DataService, Item} from "./data.service";
+import {environment} from "../environments/environment";
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ export class AppComponent {
   socket: Socket;
 
   constructor(public data: DataService) {
-    this.socket = connect("http://localhost:3000");
+    this.socket = connect(environment.apiURL);
 
     this.socket.emit("server");
 
@@ -24,25 +25,8 @@ export class AppComponent {
       this.spinWheel(data.randNum);
     })
 
-    this.socket.on("table", (data: {items: any}) => {
-      const receivedData = JSON.parse(data.items);
-
-      let map = new Map(
-        Array.from(receivedData, ([outerKey, innerArray]) => {
-          const innerMap: Map<string, Item> = new Map(innerArray);
-          return [outerKey, innerMap];
-        })
-      );
-
-      for (let [inner, outer] of map) {
-        console.log(inner)
-        for (let [i1, o1] of outer) {
-          console.log(i1)
-          console.log(o1)
-        }
-      }
-
-      this.data.split(map)
+    this.socket.on("table", (data: {jetons: number, itemName: string}) => {
+      this.data.items.get(data.itemName)!.jetonAmount += data.jetons
     })
 
     this.socket.on("end", () => {

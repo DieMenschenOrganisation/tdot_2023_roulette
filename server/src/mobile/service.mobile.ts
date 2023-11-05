@@ -1,6 +1,5 @@
 import {ErrorMSG, Success, WebSocket} from "./utils";
 import {router} from "../index";
-import {RouterMobile} from "./router.mobile";
 
 export class ServiceMobile {
 
@@ -198,16 +197,13 @@ export class ServiceMobile {
         this.items.get(name)!.get(itemName)!.jetonAmount += amount;
         this.money.get(name)!.money -= amount;
 
-        const data = Array.from(this.items, ([outerKey, innerMap]) => {
-            const innerArray = Array.from(innerMap, ([innerKey, item]) => {
-                return [innerKey, item];
-            });
-            return [outerKey, innerArray];
-        });
-
-        this.serverWS.emit("table", {items: JSON.stringify(data)})
+        if (this.serverWS != undefined) this.itemToMain(itemName, amount);
 
         return Success.success;
+    }
+
+    private itemToMain(itemName: string, amount: number) {
+        this.serverWS.emit("table", {jetons: amount, itemName: itemName})
     }
 
     delete(name: string) {
@@ -232,25 +228,23 @@ export class ServiceMobile {
 
     async countdownAndDoSomething() {
         while (true) {
-            for (let i = 30; i >= 0; i--) {
+            for (let i = 60; i >= 0; i--) {
                 console.log(`Noch ${i} Sekunden`);
 
                 this.remainingTime = i;
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
-                router.socketIO.emit("remainingTime", i)
+                this.emitToMobile("remainingTime", i);
             }
 
-            router.socketIO.emit("running");
+            this.emitToMobile("running");
 
             let randNum = this.getRandomNumber(0, 36);
             console.log("Zufallszahl: " + randNum);
 
-            if (this.serverWS != undefined) {
-                this.serverWS.emit("number", {randNum: randNum})
-            } else {
-                console.log("server ist nicht online")
-            }
+            if (this.serverWS != undefined) this.serverWS.emit("number", {randNum: randNum})
+
+            await new Promise(resolve => setTimeout(resolve, 15000));
 
             for (let key of this.items.keys()) {
                 this.payout(key, randNum)
@@ -259,13 +253,19 @@ export class ServiceMobile {
                 console.log("geld gesendet an: " + key)
 
                 this.money.get(key)!.ws.emit("roundEnd", this.money.get(key)!.money)
+
                 //todo jonas backend anfragen
             }
 
-            await new Promise(resolve => setTimeout(resolve, 6500));
+            if (this.serverWS != undefined) this.serverWS.emit("end");
 
-            this.serverWS.emit("end");
-            router.socketIO.emit("runnable");
+            this.emitToMobile("runnable")
+        }
+    }
+
+    private emitToMobile(message: string, val?: any) {
+        for (let value of this.money.values()) {
+            value.ws.emit(message, val);
         }
     }
 

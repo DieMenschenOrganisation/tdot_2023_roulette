@@ -25,8 +25,7 @@
 
           <div [class.inactive]="!handleClick.betweenBetsEnabled" [class.mark]="handleClick.betweenBetsEnabled"
                class="invisible invisible1">
-            <div class="jetonPlace"
-                 [ngClass]="{'bigger': !handleClick.betweenBetsEnabled && !handleClick.isBetweenBetExistent}">
+            <div class="jetonPlace">
               <app-jeton
                 [jetonAmount]="data.items.get(handleClick.handleInvisible1Click(x, y).toString())!.jetonAmount"></app-jeton>
             </div>
@@ -34,8 +33,7 @@
 
           <div [class.inactive]="!handleClick.betweenBetsEnabled" [class.mark]="handleClick.betweenBetsEnabled"
                class="invisible invisible2" *ngIf="y != 11">
-            <div class="jetonPlace"
-                 [ngClass]="{'bigger': !handleClick.betweenBetsEnabled && !handleClick.isBetweenBetExistent}">
+            <div class="jetonPlace">
               <app-jeton
                 [jetonAmount]="data.items.get(handleClick.handleInvisible2Click(x, y).toString())!.jetonAmount"></app-jeton>
             </div>
@@ -43,8 +41,7 @@
 
           <div [class.inactive]="!handleClick.betweenBetsEnabled" [class.mark]="handleClick.betweenBetsEnabled"
                class="invisible invisible3" *ngIf="y != 11">
-            <div class="jetonPlace"
-                 [ngClass]="{'bigger': !handleClick.betweenBetsEnabled && handleClick.isBetweenBetExistent}">
+            <div class="jetonPlace">
               <app-jeton
                 [jetonAmount]="data.items.get(handleClick.handleInvisible3Click(x, y).toString())!.jetonAmount"></app-jeton>
             </div>
