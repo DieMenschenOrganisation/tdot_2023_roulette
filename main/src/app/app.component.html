@@ -1,39 +1,4 @@
-<div>
+<div *ngIf="authenticated">
   <app-wheel *ngIf="data.active" #wheelComponent></app-wheel>
   <app-table ></app-table>
 </div>
-
-<!--<div class="roulette-table">-->
-<!--  <div class="innen-wetten">-->
-<!--    <h2>Innenwetten (Inside Bets)</h2>-->
-<!--    <table>-->
-<!--      <tr>-->
-<!--        <td>Straight-Up (Einzelne Zahl)</td>-->
-<!--        <td class="auszahlung">35:1</td>-->
-<!--        <td class="franzoesisch">Plein</td>-->
-<!--      </tr>-->
-<!--      <tr>-->
-<!--        <td>Split Bet (Zweierwette)</td>-->
-<!--        <td class="auszahlung">17:1</td>-->
-<!--        <td class="franzoesisch">Cheval</td>-->
-<!--      </tr>-->
-<!--      &lt;!&ndash; Weitere Innenwetten hier &ndash;&gt;-->
-<!--    </table>-->
-<!--  </div>-->
-<!--  <div class="aussen-wetten">-->
-<!--    <h2>Außenwetten (Outside Bets)</h2>-->
-<!--    <table>-->
-<!--      <tr>-->
-<!--        <td>Red/Black (Rot/Schwarz)</td>-->
-<!--        <td class="auszahlung">1:1</td>-->
-<!--        <td class="franzoesisch">Rouge/Noir</td>-->
-<!--      </tr>-->
-<!--      <tr>-->
-<!--        <td>Odd/Even (Gerade/Ungerade)</td>-->
-<!--        <td class="auszahlung">1:1</td>-->
-<!--        <td class="franzoesisch">Pair/Impair</td>-->
-<!--      </tr>-->
-<!--      &lt;!&ndash; Weitere Außenwetten hier &ndash;&gt;-->
-<!--    </table>-->
-<!--  </div>-->
-<!--</div>-->

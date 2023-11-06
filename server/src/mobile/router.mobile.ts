@@ -27,8 +27,13 @@ export class RouterMobile {
 
             ws.emit("joined", {message: "user connected successfully"})
 
-            ws.on("server", () => {
-                ServiceMobile.getInstanz().serverWS = ws;
+            ws.on("server", (password: string) => {
+                if (ServiceMobile.getInstanz().checkPassword(password)) {
+                    ServiceMobile.getInstanz().serverWS = ws;
+                    ws.emit("correctPassword");
+                } else {
+                    ws.emit("wrongPassword");
+                }
 
                 //todo on connect send fullMap
             })

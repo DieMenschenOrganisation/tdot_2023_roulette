@@ -1,5 +1,6 @@
 import {ErrorMSG, Success, WebSocket} from "./utils";
-import {router} from "../index";
+
+require('dotenv').config();
 
 export class ServiceMobile {
 
@@ -14,7 +15,7 @@ export class ServiceMobile {
     }
 
     private _items: Map<string, Map<string, Item>> = new Map<string, Map<string, Item>>();
-    private _money: Map<string, { money: number, ws: WebSocket }> = new Map<string, { money: number, ws: WebSocket }>;
+    private _playerData: Map<string, PlayerData> = new Map<string, PlayerData>;
 
     private _serverWS: any;
 
@@ -22,27 +23,32 @@ export class ServiceMobile {
         return this._serverWS;
     }
 
+    checkPassword(password: string) {
+        let envPassword = process.env.SECRET_KEY;
+
+        return password == envPassword;
+    }
+
     set serverWS(value: WebSocket) {
         this._serverWS = value;
     }
 
-    get money(): Map<string, { money: number; ws: WebSocket }> {
-        return this._money;
-    }
-
-
     get items(): Map<string, Map<string, Item>> {
         return this._items;
+    }
+
+    get playerData(): Map<string, PlayerData> {
+        return this._playerData;
     }
 
 
     login(name: string, ws: WebSocket) {
         if (!this.items.has(name)) {
             this.items.set(name, this.initItems());
-            this.money.set(name, {money: 1200, ws: ws});
+            this.playerData.set(name, {money: 1200, ws: ws, active: false});
             //todo money from jonas
         } else {
-            this.money.set(name, {money: this.money.get(name)!.money, ws: ws})
+            this.playerData.set(name, {money: this.playerData.get(name)!.money, ws: ws, active: false})
             //todo money from jonas
         }
     }
@@ -190,7 +196,7 @@ export class ServiceMobile {
             let amount = value.jetonAmount;
             amount += value.jetonAmount * value.payoutFactor;
 
-            this.money.get(name)!.money += amount;
+            this.playerData.get(name)!.money += amount;
             //todo money to jonas
         }
     }
@@ -201,10 +207,12 @@ export class ServiceMobile {
         if (this.getMoneyOfPlayer(name) < amount) return ErrorMSG.notEnoughMoney;
 
         this.items.get(name)!.get(itemName)!.jetonAmount += amount;
-        this.money.get(name)!.money -= amount;
+        this.playerData.get(name)!.money -= amount;
+        this.playerData.get(name)!.active = true;
         //todo money from jonas
 
-        if (this.serverWS != undefined) this.itemToMain(itemName, amount);
+        if (this.serverWS != undefined)
+            this.itemToMain(itemName, amount);
 
         return Success.success;
     }
@@ -216,6 +224,10 @@ export class ServiceMobile {
     delete(name: string) {
         if (!this.items.has(name)) return ErrorMSG.playerNotExists;
 
+        if (this.serverWS != undefined) {
+            this.serverWS.emit("delete", (JSON.stringify(Array.from(this.items.get(name)!.entries()))))
+        }
+
         let money = 0;
 
         for (let value of this.items.get(name)!.values()) {
@@ -223,12 +235,13 @@ export class ServiceMobile {
             value.jetonAmount = 0;
         }
 
-        this.money.get(name)!.money += money;
+        this.playerData.get(name)!.money += money;
+        this.playerData.get(name)!.active = false;
         //todo money to jonas
     }
 
     getMoneyOfPlayer(name: string): number {
-        return this.money.get(name) == undefined ? 0 : this.money.get(name)!.money;
+        return this.playerData.get(name) == undefined ? 0 : this.playerData.get(name)!.money;
         //todo money from jonas
     }
 
@@ -253,15 +266,24 @@ export class ServiceMobile {
 
             if (this.serverWS != undefined) this.serverWS.emit("number", {randNum: randNum})
 
-            await new Promise(resolve => setTimeout(resolve, 15000));
-
             for (let key of this.items.keys()) {
+                if (!this.playerData.get(key)!.active) continue;
+
                 this.payout(key, randNum)
                 this.items.set(key, this.initItems())
 
                 console.log("geld gesendet an: " + key)
 
-                this.money.get(key)!.ws.emit("roundEnd", this.money.get(key)!.money)
+                this.playerData.get(key)!.ws.emit("payOut", this.playerData.get(key)!.money)
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 15000));
+
+            for (let key of this.items.keys()) {
+                if (!this.playerData.get(key)!.active) break;
+
+                this.playerData.get(key)!.active = false;
+                this.playerData.get(key)!.ws.emit("roundEnd");
             }
 
             if (this.serverWS != undefined) this.serverWS.emit("end");
@@ -271,7 +293,7 @@ export class ServiceMobile {
     }
 
     private emitToMobile(message: string, val?: any) {
-        for (let value of this.money.values()) {
+        for (let value of this.playerData.values()) {
             value.ws.emit(message, val);
         }
     }
@@ -288,3 +310,5 @@ export type Item = {
     payoutFactor: number,
     jetonAmount: number
 }
+
+export type PlayerData = { money: number, ws: WebSocket, active: boolean }

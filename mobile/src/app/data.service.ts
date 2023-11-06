@@ -35,10 +35,13 @@ export class DataService {
       this.items = this.getItems();
     })
 
-    this.socket.on("roundEnd", (money: number) => {
+    this.socket.on("payOut", (money: number) => {
       console.log(money)
 
       this.currentMoney = money;
+    })
+
+    this.socket.on("roundEnd", () => {
       this.items = this.getItems();
     })
 
