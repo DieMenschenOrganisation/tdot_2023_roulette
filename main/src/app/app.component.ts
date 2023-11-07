@@ -21,25 +21,22 @@ export class AppComponent implements OnInit{
   }
 
   async ngOnInit() {
-    this.buildSocketIoConnection()
-    this.authenticated = true
+    let password = prompt("enter admin-password:");
+    password = password == null ? "" : password;
 
-    // let password = prompt("enter admin-password:");
-    // password = password == null ? "" : password;
-    //
-    // let passwordHash = await hashPassword(password);
-    //
-    // this.httpClient.post<void>(environment.apiURL + "/auth", {password: password}, {responseType: "text" as 'json'}).subscribe({
-    //   next: res => {
-    //     console.log("ok")
-    //
-    //     this.authenticated = true
-    //     this.buildSocketIoConnection();
-    //   },
-    //   error: err => {
-    //     console.log("err")
-    //   }
-    // })
+    //let passwordHash = await hashPassword(password);
+
+    this.httpClient.post<void>(environment.apiURL + "/auth", {password: password}, {responseType: "text" as 'json'}).subscribe({
+      next: res => {
+        console.log("ok")
+
+        this.authenticated = true
+        this.buildSocketIoConnection();
+      },
+      error: err => {
+        console.log("err")
+      }
+    })
   }
 
   formatTime() {
