@@ -256,6 +256,7 @@ export class ServiceMobile {
                 this.remainingTime = i;
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
+                if (this.serverWS != undefined) this.serverWS.emit("remainingTime", i);
                 this.emitToMobile("remainingTime", i);
             }
 
@@ -277,7 +278,7 @@ export class ServiceMobile {
                 this.playerData.get(key)!.ws.emit("payOut", this.playerData.get(key)!.money)
             }
 
-            await new Promise(resolve => setTimeout(resolve, 15000));
+            await new Promise(resolve => setTimeout(resolve, 20000));
 
             for (let key of this.items.keys()) {
                 if (!this.playerData.get(key)!.active) break;

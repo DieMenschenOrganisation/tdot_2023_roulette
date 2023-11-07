@@ -14,6 +14,20 @@ export class RouterMobile {
 
     constructor() {
         this.app.use(cors());
+        this.app.use(express.json())
+
+        this.app.post("/auth", (req, res) => {
+            const userEnteredPassword = req.body.password;
+            console.log(userEnteredPassword)
+
+            if (ServiceMobile.getInstanz().checkPassword(userEnteredPassword)) {
+                res.status(200);
+                res.end()
+            } else {
+                res.status(401).send("wrong password")
+                res.end()
+            }
+        })
 
         this.app.use("/mobile", express.static(path.join(__dirname, '/../../../mobile/dist/mobile')));
         this.app.use("/main", express.static(path.join(__dirname, '/../../../main/dist/main')));
@@ -27,13 +41,8 @@ export class RouterMobile {
 
             ws.emit("joined", {message: "user connected successfully"})
 
-            ws.on("server", (password: string) => {
-                if (ServiceMobile.getInstanz().checkPassword(password)) {
-                    ServiceMobile.getInstanz().serverWS = ws;
-                    ws.emit("correctPassword");
-                } else {
-                    ws.emit("wrongPassword");
-                }
+            ws.on("server", () => {
+                ServiceMobile.getInstanz().serverWS = ws;
 
                 //todo on connect send fullMap
             })

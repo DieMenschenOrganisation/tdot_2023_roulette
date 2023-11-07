@@ -146,6 +146,11 @@ export class DataService {
   items: Map<string, Item>
 
   active: boolean = true;
+
+  activeNum: number | undefined;
+
+  remainingTime: number = 0;
+
 }
 
 export type Item = {

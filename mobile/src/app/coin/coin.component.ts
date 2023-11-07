@@ -12,6 +12,10 @@ export class CoinComponent implements OnInit{
   constructor(public dataService: DataService, public handleClick: HandleClicksService) {
   }
 
+  formatTime() {
+    return this.dataService.remainingTime === 1 ? 'Sekunde' : 'Sekunden';
+  }
+
   jetons: number[] = [1, 5, 10, 25, 50, 100, 500];
   currentJetonIdx: number = 0;
 
@@ -33,5 +37,14 @@ export class CoinComponent implements OnInit{
 
   ngOnInit(): void {
     this.dataService.currentJetonImg = "../../assets/jeton" + this.dataService.currentJeton + ".png";
+  }
+
+  toggle() {
+    if (!this.handleClick.betweenBetsEnabled) {
+      alert("Achtung! Ab jetzt können Sie auf mehrere Felder setzen. Möglicherweise müssen Sie dafür zoomen. Viel Spaß!")
+    } else {
+      alert("Achtung! Ab jetzt können Sie NICHT mehr auf mehrere Felder setzen. Viel Spaß!")
+    }
+    this.handleClick.betweenBetsEnabled = !this.handleClick.betweenBetsEnabled
   }
 }

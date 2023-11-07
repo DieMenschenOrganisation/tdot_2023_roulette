@@ -1,11 +1,10 @@
-$outerWidth: 95vw;
+$outerWidth: 85vw;
 $height: 12vh;
 $border-color: white;
 
 #center {
   display: flex;
   justify-content: center;
-  background-color: green;
 }
 
 #outer {
@@ -76,8 +75,9 @@ $border-color: white;
   flex: 1;
 
   font-family: "Arial", serif;
-  font-size: 16px;
+  font-size: 15px;
   color: white;
+  background-color: darkgreen;
 
   height: $height;
   width: calc($outerWidth / 14);
@@ -87,9 +87,9 @@ $border-color: white;
 
 
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 740px) {
   .elem {
-    font-size: 12px;
+    font-size: 13px;
   }
 }
 
@@ -134,9 +134,9 @@ $border-color: white;
   transform: translate(100%, 100%);
 }
 
-.mark {
-  border: 1px solid blue;
-}
+//.mark {
+//  border: 1px solid blue;
+//}
 
 
 .innerbet, .outbet1, .outbet2, .zero, .twoToOne {
@@ -146,7 +146,7 @@ $border-color: white;
 }
 
 .red {
-  background-color: red;
+  background-color: #e50000;
 }
 
 .black {

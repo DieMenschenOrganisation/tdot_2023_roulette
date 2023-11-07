@@ -6,18 +6,20 @@ import { WheelComponent } from './wheel/wheel.component';
 import { TableComponent } from './table/table.component';
 import {NgForOf, NgIf} from "@angular/common";
 import {JetonComponent} from "./jeton/jeton.component";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
     AppComponent,
     WheelComponent,
     TableComponent,
-    JetonComponent
+    JetonComponent,
   ],
   imports: [
     BrowserModule,
     NgForOf,
-    NgIf
+    NgIf,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

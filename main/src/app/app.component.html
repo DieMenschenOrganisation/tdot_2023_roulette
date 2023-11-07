@@ -1,4 +1,15 @@
 <div *ngIf="authenticated">
   <app-wheel *ngIf="data.active" #wheelComponent></app-wheel>
   <app-table ></app-table>
+
+  <div class="countdown-container">
+    <div *ngIf="data.remainingTime != 0">
+      <div>Verbleibende Zeit:</div>
+      <div>{{data.remainingTime}} {{formatTime()}}</div>
+    </div>
+    <div *ngIf="data.remainingTime == 0">
+      <div>Das Spiel läuft..</div>
+      <div>Viel Glück!</div>
+    </div>
+  </div>
 </div>
