@@ -25,14 +25,14 @@ export class WheelComponent {
     let rand = Math.random() * 360
 
     nativeElement.animate([{transform: `rotateZ(${this.lastWheelRotation}deg)`}, {transform: `rotateZ(${rand + (360 * 3)}deg)`}], {
-      duration: 10000,
+      duration: 7000,
       iterations: 1,
       easing: "ease-in-out",
       fill: "forwards"
     })
 
     ball.animate([{transform: `rotateZ(${this.lastBallRotation}deg) translateY(-200px)`}, {transform: `rotateZ(-${-rand + base + (360 * 3)}deg) translateY(-105px)`}], {
-      duration: 10500,
+      duration: 7500,
       iterations: 1,
       easing: "ease-in-out",
       fill: "forwards"

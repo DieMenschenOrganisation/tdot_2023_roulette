@@ -83,7 +83,7 @@ export class AppComponent implements OnInit{
 
     setTimeout(() => {
       this.data.activeNum = number;
-    }, 6500)
+    }, 7500)
   }
 
 
