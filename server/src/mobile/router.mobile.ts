@@ -29,6 +29,21 @@ export class RouterMobile {
             }
         })
 
+        this.app.get("/user/:userID", async (req, res) => {
+            let userID = req.params.userID;
+            console.log(userID)
+
+            let response = await ServiceMobile.getInstanz().doesPlayerExists(userID);
+
+            if (response) {
+                res.status(200);
+                res.end()
+            } else {
+                res.status(401).send("user does not exist")
+                res.end()
+            }
+        })
+
         this.app.use("/mobile", express.static(path.join(__dirname, '/../../../mobile/dist/mobile')));
         this.app.use("/main", express.static(path.join(__dirname, '/../../../main/dist/main')));
 
@@ -47,26 +62,26 @@ export class RouterMobile {
                 //todo on connect send fullMap
             })
 
-            ws.on("initData", (name: { name: string }) => {
-                console.log(name)
-                ServiceMobile.getInstanz().login(name.name, ws);
+            ws.on("initData", (userID: { userID: string }) => {
+                console.log(userID)
+                ServiceMobile.getInstanz().login(userID.userID, ws);
 
                 ws.emit("startData", ({
-                    money: ServiceMobile.getInstanz().getMoneyOfPlayer(name.name),
-                    items: JSON.stringify(Array.from(ServiceMobile.getInstanz().items.get(name.name)!.entries())),
+                    money: ServiceMobile.getInstanz().getMoneyOfPlayer(userID.userID),
+                    items: JSON.stringify(Array.from(ServiceMobile.getInstanz().items.get(userID.userID)!.entries())),
                     remainingTime: ServiceMobile.getInstanz().remainingTime
                 }));
             })
 
-            ws.on("delete", (name: string) => {
+            ws.on("delete", (userID: string) => {
                 console.log("del")
-                ServiceMobile.getInstanz().delete(name);
+                ServiceMobile.getInstanz().delete(userID);
 
-                ws.emit("deleted", (ServiceMobile.getInstanz().getMoneyOfPlayer(name)))
+                ws.emit("deleted", (ServiceMobile.getInstanz().getMoneyOfPlayer(userID)))
             })
 
-            ws.on("add", (data: { name: string, itemName: string, amount: number }) => {
-                let status = ServiceMobile.getInstanz().add(data.name, data.itemName, data.amount);
+            ws.on("add", (data: { userID: string, itemName: string, amount: number }) => {
+                let status = ServiceMobile.getInstanz().add(data.userID, data.itemName, data.amount);
 
                 if (status == ErrorMSG.notEnoughMoney) ws.emit("error", ErrorMSG.notEnoughMoney);
                 if (status == ErrorMSG.error) ws.emit("error", ErrorMSG.error);

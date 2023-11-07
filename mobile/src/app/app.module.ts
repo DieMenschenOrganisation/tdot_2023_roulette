@@ -8,6 +8,7 @@ import { BlockedComponent } from './blocked/blocked.component';
 import { JetonComponent } from './jeton/jeton.component';
 import { RunningComponent } from './running/running.component';
 import { AppRoutingModule } from './app-routing.module';
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { AppRoutingModule } from './app-routing.module';
   imports: [
     BrowserModule,
     NgOptimizedImage,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

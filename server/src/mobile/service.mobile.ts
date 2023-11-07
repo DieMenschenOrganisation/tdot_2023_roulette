@@ -3,6 +3,7 @@ import {ErrorMSG, Success, WebSocket} from "./utils";
 require('dotenv').config();
 import axios from 'axios';
 import * as https from "https";
+import e from "express";
 
 export class ServiceMobile {
 
@@ -45,19 +46,31 @@ export class ServiceMobile {
         return this._playerData;
     }
 
+    async doesPlayerExists(userID: string) {
+        console.log("hallo")
+        try {
+            const res = await axios.get(process.env.API_URL + "/user/" + userID, {httpsAgent: this.agent});
 
-    login(name: string, ws: WebSocket) {
-        if (!this.items.has(name)) {
-            //todo check if jonas has name
+            console.log("a")
 
-            this.items.set(name, this.initItems());
+            return res.status === 200;
+        } catch (error) {
+            console.log("b")
+            console.error(error)
+            return false;
+        }
+    }
 
-            axios.get(process.env.API_URL + "/user/points/" + name, {httpsAgent: this.agent})
+    login(userID: string, ws: WebSocket) {
+        if (!this.items.has(userID)) {
+            this.items.set(userID, this.initItems());
+
+            axios.get(process.env.API_URL + "/user/points/" + userID, {httpsAgent: this.agent})
                 .then(
                     res => {
                         let money = res.data;
 
-                        this.playerData.set(name, {money: money, ws: ws, active: false});
+                        this.playerData.set(userID, {money: money, ws: ws, active: false});
                     })
                 .catch(
                     error => {
@@ -65,7 +78,7 @@ export class ServiceMobile {
                     }
                 )
         } else {
-            this.playerData.set(name, {money: this.playerData.get(name)!.money, ws: ws, active: false})
+            this.playerData.set(userID, {money: this.playerData.get(userID)!.money, ws: ws, active: false})
         }
     }
 
@@ -204,17 +217,17 @@ export class ServiceMobile {
     }
 
 
-    payout(name: string, number: number) {
-        for (let value of this._items.get(name)!.values()) {
+    payout(userID: string, number: number) {
+        for (let value of this._items.get(userID)!.values()) {
             if (value.jetonAmount == 0) continue
             if (!value.values.includes(number)) continue;
 
             let amount = value.jetonAmount;
             amount += value.jetonAmount * value.payoutFactor;
 
-            this.playerData.get(name)!.money += amount;
+            this.playerData.get(userID)!.money += amount;
 
-            axios.get(process.env.API_URL + "/user/points/change/?userID=" + name + "&points=" + amount, {httpsAgent: this.agent})
+            axios.get(process.env.API_URL + "/user/points/change/?userID=" + userID + "&points=" + amount, {httpsAgent: this.agent})
                 .catch(
                     error => {
                         console.error("Fehler: " + error)
@@ -223,16 +236,16 @@ export class ServiceMobile {
         }
     }
 
-    add(name: string, itemName: string, amount: number) {
-        if (!this.items.has(name)) return ErrorMSG.playerNotExists;
-        if (!this.items.get(name)!.has(itemName)) return ErrorMSG.error;
-        if (this.getMoneyOfPlayer(name) < amount) return ErrorMSG.notEnoughMoney;
+    add(userID: string, itemuserID: string, amount: number) {
+        if (!this.items.has(userID)) return ErrorMSG.playerNotExists;
+        if (!this.items.get(userID)!.has(itemuserID)) return ErrorMSG.error;
+        if (this.getMoneyOfPlayer(userID) < amount) return ErrorMSG.notEnoughMoney;
 
-        this.items.get(name)!.get(itemName)!.jetonAmount += amount;
-        this.playerData.get(name)!.money -= amount;
-        this.playerData.get(name)!.active = true;
+        this.items.get(userID)!.get(itemuserID)!.jetonAmount += amount;
+        this.playerData.get(userID)!.money -= amount;
+        this.playerData.get(userID)!.active = true;
 
-        axios.get(process.env.API_URL + "/user/points/change/?userID=" + name + "&points=" + -amount, {httpsAgent: this.agent})
+        axios.get(process.env.API_URL + "/user/points/change/?userID=" + userID + "&points=" + -amount, {httpsAgent: this.agent})
             .catch(
                 error => {
                     console.error("Fehler: " + error)
@@ -240,42 +253,42 @@ export class ServiceMobile {
             )
 
         if (this.serverWS != undefined)
-            this.itemToMain(itemName, amount);
+            this.itemToMain(itemuserID, amount);
 
         return Success.success;
     }
 
-    private itemToMain(itemName: string, amount: number) {
-        this.serverWS.emit("table", {jetons: amount, itemName: itemName})
+    private itemToMain(itemuserID: string, amount: number) {
+        this.serverWS.emit("table", {jetons: amount, itemuserID: itemuserID})
     }
 
-    delete(name: string) {
-        if (!this.items.has(name)) return ErrorMSG.playerNotExists;
+    delete(userID: string) {
+        if (!this.items.has(userID)) return ErrorMSG.playerNotExists;
 
         if (this.serverWS != undefined) {
-            this.serverWS.emit("delete", (JSON.stringify(Array.from(this.items.get(name)!.entries()))))
+            this.serverWS.emit("delete", (JSON.stringify(Array.from(this.items.get(userID)!.entries()))))
         }
 
         let money = 0;
 
-        for (let value of this.items.get(name)!.values()) {
+        for (let value of this.items.get(userID)!.values()) {
             money += value.jetonAmount;
             value.jetonAmount = 0;
         }
 
-        axios.get(process.env.API_URL + "/user/points/change/?userID=" + name + "&points=" + money, {httpsAgent: this.agent})
+        axios.get(process.env.API_URL + "/user/points/change/?userID=" + userID + "&points=" + money, {httpsAgent: this.agent})
             .catch(
                 error => {
                     console.error("Fehler: " + error)
                 }
             )
 
-        this.playerData.get(name)!.money += money;
-        this.playerData.get(name)!.active = false;
+        this.playerData.get(userID)!.money += money;
+        this.playerData.get(userID)!.active = false;
     }
 
-    getMoneyOfPlayer(name: string): number {
-        return this.playerData.get(name) == undefined ? 0 : this.playerData.get(name)!.money;
+    getMoneyOfPlayer(userID: string): number {
+        return this.playerData.get(userID) == undefined ? 0 : this.playerData.get(userID)!.money;
     }
 
 
