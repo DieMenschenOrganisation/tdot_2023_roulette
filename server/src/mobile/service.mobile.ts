@@ -1,6 +1,8 @@
 import {ErrorMSG, Success, WebSocket} from "./utils";
 
 require('dotenv').config();
+import axios from 'axios';
+import * as https from "https";
 
 export class ServiceMobile {
 
@@ -18,6 +20,8 @@ export class ServiceMobile {
     private _playerData: Map<string, PlayerData> = new Map<string, PlayerData>;
 
     private _serverWS: any;
+
+    agent = new https.Agent({rejectUnauthorized: false});
 
     get serverWS() {
         return this._serverWS;
@@ -44,12 +48,24 @@ export class ServiceMobile {
 
     login(name: string, ws: WebSocket) {
         if (!this.items.has(name)) {
+            //todo check if jonas has name
+
             this.items.set(name, this.initItems());
-            this.playerData.set(name, {money: 1200, ws: ws, active: false});
-            //todo money from jonas
+
+            axios.get(process.env.API_URL + "/user/points/" + name, {httpsAgent: this.agent})
+                .then(
+                    res => {
+                        let money = res.data;
+
+                        this.playerData.set(name, {money: money, ws: ws, active: false});
+                    })
+                .catch(
+                    error => {
+                        console.error("Fehler: " + error)
+                    }
+                )
         } else {
             this.playerData.set(name, {money: this.playerData.get(name)!.money, ws: ws, active: false})
-            //todo money from jonas
         }
     }
 
@@ -197,7 +213,13 @@ export class ServiceMobile {
             amount += value.jetonAmount * value.payoutFactor;
 
             this.playerData.get(name)!.money += amount;
-            //todo money to jonas
+
+            axios.get(process.env.API_URL + "/user/points/change/?userID=" + name + "&points=" + amount, {httpsAgent: this.agent})
+                .catch(
+                    error => {
+                        console.error("Fehler: " + error)
+                    }
+                )
         }
     }
 
@@ -209,7 +231,13 @@ export class ServiceMobile {
         this.items.get(name)!.get(itemName)!.jetonAmount += amount;
         this.playerData.get(name)!.money -= amount;
         this.playerData.get(name)!.active = true;
-        //todo money from jonas
+
+        axios.get(process.env.API_URL + "/user/points/change/?userID=" + name + "&points=" + -amount, {httpsAgent: this.agent})
+            .catch(
+                error => {
+                    console.error("Fehler: " + error)
+                }
+            )
 
         if (this.serverWS != undefined)
             this.itemToMain(itemName, amount);
@@ -235,14 +263,19 @@ export class ServiceMobile {
             value.jetonAmount = 0;
         }
 
+        axios.get(process.env.API_URL + "/user/points/change/?userID=" + name + "&points=" + money, {httpsAgent: this.agent})
+            .catch(
+                error => {
+                    console.error("Fehler: " + error)
+                }
+            )
+
         this.playerData.get(name)!.money += money;
         this.playerData.get(name)!.active = false;
-        //todo money to jonas
     }
 
     getMoneyOfPlayer(name: string): number {
         return this.playerData.get(name) == undefined ? 0 : this.playerData.get(name)!.money;
-        //todo money from jonas
     }
 
 
@@ -260,6 +293,7 @@ export class ServiceMobile {
                 this.emitToMobile("remainingTime", i);
             }
 
+            console.log()
             this.emitToMobile("running");
 
             let randNum = this.getRandomNumber(0, 36);
