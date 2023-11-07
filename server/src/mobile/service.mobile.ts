@@ -281,7 +281,7 @@ export class ServiceMobile {
             await new Promise(resolve => setTimeout(resolve, 20000));
 
             for (let key of this.items.keys()) {
-                if (!this.playerData.get(key)!.active) break;
+                if (!this.playerData.get(key)!.active) continue;
 
                 this.playerData.get(key)!.active = false;
                 this.playerData.get(key)!.ws.emit("roundEnd");
