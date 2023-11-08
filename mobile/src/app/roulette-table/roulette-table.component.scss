@@ -134,10 +134,9 @@ $border-color: white;
   transform: translate(100%, 100%);
 }
 
-//.mark {
-//  border: 1px solid blue;
-//}
-
+.mark {
+  border: 1px solid #00adb5;
+}
 
 .innerbet, .outbet1, .outbet2, .zero, .twoToOne {
   display: flex;

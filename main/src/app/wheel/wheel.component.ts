@@ -31,7 +31,7 @@ export class WheelComponent {
       fill: "forwards"
     })
 
-    ball.animate([{transform: `rotateZ(${this.lastBallRotation}deg) translateY(-200px)`}, {transform: `rotateZ(-${-rand + base + (360 * 3)}deg) translateY(-105px)`}], {
+    ball.animate([{transform: `rotateZ(${this.lastBallRotation}deg) translateY(-22vh)`}, {transform: `rotateZ(-${-rand + base + (360 * 3)}deg) translateY(-11.5vh)`}], {
       duration: 7500,
       iterations: 1,
       easing: "ease-in-out",

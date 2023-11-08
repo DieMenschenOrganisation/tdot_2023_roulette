@@ -40,11 +40,11 @@ export class CoinComponent implements OnInit{
   }
 
   toggle() {
-    if (!this.handleClick.betweenBetsEnabled) {
-      alert("Achtung! Ab jetzt können Sie auf mehrere Felder setzen. Möglicherweise müssen Sie dafür zoomen. Viel Spaß!")
-    } else {
-      alert("Achtung! Ab jetzt können Sie NICHT mehr auf mehrere Felder setzen. Viel Spaß!")
-    }
+    // if (!this.handleClick.betweenBetsEnabled) {
+    //   alert("Achtung! Ab jetzt können Sie auf mehrere Felder setzen. Möglicherweise müssen Sie dafür zoomen. Viel Spaß!")
+    // } else {
+    //   alert("Achtung! Ab jetzt können Sie NICHT mehr auf mehrere Felder setzen. Viel Spaß!")
+    // }
     this.handleClick.betweenBetsEnabled = !this.handleClick.betweenBetsEnabled
   }
 }
