@@ -1,10 +1,11 @@
 <div *ngIf="isLandscape">
-  <div [class.disabled]="dataService.running" >
+  <div *ngIf="authorized" [class.disabled]="dataService.running">
     <app-roulette-table></app-roulette-table>
     <app-coin></app-coin>
   </div>
-
-
+  <div *ngIf="!authorized">
+    <h1>error</h1>
+  </div>
 </div>
 
 <div *ngIf="!isLandscape">

@@ -2,7 +2,10 @@ FROM node:20-alpine3.16
 COPY backend ./backend
 COPY frontend ./frontend
 COPY assets ./assets
-WORKDIR ./frontend
+WORKDIR ./mobile
+RUN npm install
+RUN npm run build
+WORKDIR ../main
 RUN npm install
 RUN npm run build
 WORKDIR ../backend

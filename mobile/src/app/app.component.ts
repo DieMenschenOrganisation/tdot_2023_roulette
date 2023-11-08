@@ -5,46 +5,45 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../environments/environment";
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
 
-    isLandscape: boolean = window.innerWidth > window.innerHeight;
+  isLandscape: boolean = window.innerWidth > window.innerHeight;
+  authorized: boolean = false;
 
-    constructor(public dataService: DataService, private route: ActivatedRoute, private httpClient: HttpClient) {
-    }
+  constructor(public dataService: DataService, private route: ActivatedRoute, private httpClient: HttpClient) {
+  }
 
-    ngOnInit() {
-        this.route.queryParams.subscribe((params) => {
-            const userID = params["userID"];
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      const userID = params["userID"];
 
-            if (userID) {
-                console.log("name:" + userID);
-
-                this.httpClient.get<string>(environment.apiURL + "/user/" + userID).subscribe({
-                    next: res => {
-                        console.log(res)
-                        this.dataService.name = userID;
-                        this.dataService.start();
-                    },
-                    error: err => {
-                        console.error(err)
-                    }
-                })
-            }
+      if (userID) {
+        this.httpClient.get<string>(environment.apiURL + "/user/" + userID).subscribe({
+          next: res => {
+            this.authorized = true;
+            this.dataService.name = userID;
+            this.dataService.start();
+          },
+          error: err => {
+            console.error(err)
+          }
         })
+      }
+    })
 
-        this.checkOrientation();
-    }
+    this.checkOrientation();
+  }
 
-    @HostListener('window:resize', ['$event'])
-    onResize(event: Event): void {
-        this.checkOrientation();
-    }
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.checkOrientation();
+  }
 
-    checkOrientation() {
-        this.isLandscape = window.innerWidth > window.innerHeight;
-    }
+  checkOrientation() {
+    this.isLandscape = window.innerWidth > window.innerHeight;
+  }
 }

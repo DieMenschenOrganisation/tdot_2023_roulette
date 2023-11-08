@@ -36,8 +36,6 @@ export class DataService {
     })
 
     this.socket.on("payOut", (money: number) => {
-      console.log(money)
-
       this.currentMoney = money;
     })
 

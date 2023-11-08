@@ -18,25 +18,20 @@ export class RouterMobile {
 
         this.app.post("/auth", (req, res) => {
             const userEnteredPassword = req.body.password;
-            console.log(userEnteredPassword)
 
             if (ServiceMobile.getInstanz().checkPassword(userEnteredPassword)) {
                 res.status(200);
                 res.end()
             } else {
-                res.status(401).send("wrong password")
+                res.status(401).send({msg: "wrong password"})
                 res.end()
             }
         })
 
         this.app.get("/user/:userID", async (req, res) => {
             let userID = req.params.userID;
-            console.log("anfrage")
-            console.log(userID)
 
             let response = await ServiceMobile.getInstanz().doesPlayerExists(userID);
-
-            console.log("bool: " + response)
 
             if (response) {
                 res.status(200).send({msg: "accepted"});
@@ -57,16 +52,13 @@ export class RouterMobile {
         this.socketIO.on("connection", (ws) => {
             console.log("connected: " + ws.id);
 
-            ws.emit("joined", {message: "user connected successfully"})
+            ws.emit("joined", {message: "user" + ws.id + " connected successfully"})
 
             ws.on("server", () => {
                 ServiceMobile.getInstanz().serverWS = ws;
-
-                //todo on connect send fullMap
             })
 
             ws.on("initData", async (userID: { userID: string }) => {
-                console.log(userID.userID);
                 await ServiceMobile.getInstanz().login(userID.userID, ws);
 
                 ws.emit("startData", ({
@@ -77,7 +69,6 @@ export class RouterMobile {
             })
 
             ws.on("delete", async (userID: string) => {
-                console.log("del")
                 await ServiceMobile.getInstanz().delete(userID);
 
                 ws.emit("deleted", (ServiceMobile.getInstanz().getMoneyOfPlayer(userID)))
@@ -85,7 +76,6 @@ export class RouterMobile {
 
             ws.on("add", async (data: { userID: string, itemName: string, amount: number }) => {
                 let status = await ServiceMobile.getInstanz().add(data.userID, data.itemName, data.amount);
-
 
                 if (status == ErrorMSG.notEnoughMoney) ws.emit("error", ErrorMSG.notEnoughMoney);
                 if (status == ErrorMSG.error) ws.emit("error", ErrorMSG.error);

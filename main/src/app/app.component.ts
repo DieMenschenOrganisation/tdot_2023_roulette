@@ -42,8 +42,10 @@ export class AppComponent implements OnInit{
   formatTime() {
     return this.data.remainingTime === 1 ? 'Sekunde' : 'Sekunden';
   }
+
   buildSocketIoConnection() {
     this.socket = connect(environment.apiURL);
+
     this.socket.emit("server");
 
     this.socket.on("number", (data: { randNum: number }) => {

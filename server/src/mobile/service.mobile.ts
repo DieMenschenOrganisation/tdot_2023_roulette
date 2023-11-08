@@ -18,19 +18,12 @@ export class ServiceMobile {
 
     private _items: Map<string, Map<string, Item>> = new Map<string, Map<string, Item>>();
     private _playerData: Map<string, PlayerData> = new Map<string, PlayerData>;
-
     private _serverWS: any;
 
-    agent = new https.Agent({rejectUnauthorized: false});
+    private agent = new https.Agent({rejectUnauthorized: false});
 
     get serverWS() {
         return this._serverWS;
-    }
-
-    checkPassword(password: string) {
-        let envPassword = process.env.SECRET_KEY;
-
-        return password == envPassword;
     }
 
     set serverWS(value: WebSocket) {
@@ -45,13 +38,18 @@ export class ServiceMobile {
         return this._playerData;
     }
 
+    checkPassword(password: string) {
+        let envPassword = process.env.SECRET_KEY;
+
+        return password == envPassword;
+    }
+
     async doesPlayerExists(userID: string) {
         try {
             const res = await axios.get(process.env.API_URL + "/user/" + userID, {httpsAgent: this.agent});
 
             return res.status === 200;
         } catch (error) {
-            console.error(error)
             return false;
         }
     }
@@ -214,6 +212,8 @@ export class ServiceMobile {
 
             let res = await axios.get(process.env.API_URL + "/user/points/" + userID, {httpsAgent: this.agent});
             this.playerData.get(userID)!.money = res.data;
+
+            console.log("money sent to: " + userID)
         }
     }
 
@@ -281,11 +281,10 @@ export class ServiceMobile {
                 this.emitToMobile("remainingTime", i);
             }
 
-            console.log()
             this.emitToMobile("running");
 
             let randNum = this.getRandomNumber(0, 36);
-            console.log("Zufallszahl: " + randNum);
+            console.log("randNum: " + randNum);
 
             if (this.serverWS != undefined) this.serverWS.emit("number", {randNum: randNum})
 
@@ -294,10 +293,8 @@ export class ServiceMobile {
             for (let key of this.items.keys()) {
                 if (!this.playerData.get(key)!.active) continue;
 
-                this.payout(key, randNum)
+                await this.payout(key, randNum)
                 this.items.set(key, this.initItems())
-
-                console.log("geld gesendet an: " + key)
 
                 this.playerData.get(key)!.ws.emit("payOut", this.playerData.get(key)!.money)
             }
@@ -323,7 +320,7 @@ export class ServiceMobile {
         }
     }
 
-    getRandomNumber(min: number, max: number): number {
+    private getRandomNumber(min: number, max: number): number {
         const randomDecimal = Math.random();
 
         return Math.floor(randomDecimal * (max - min + 1)) + min;
