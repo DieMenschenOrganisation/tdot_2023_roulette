@@ -1,5 +1,5 @@
 FROM node:20-alpine3.16
-COPY backend ./backend
+COPY server ./server
 COPY mobile ./mobile
 COPY main ./main
 COPY assets ./assets
