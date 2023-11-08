@@ -9,6 +9,6 @@ RUN npm run build
 WORKDIR ../main
 RUN npm install
 RUN npm run build
-WORKDIR ../backend
+WORKDIR ../server
 RUN npm install
 CMD ["npm", "run", "dev"]
