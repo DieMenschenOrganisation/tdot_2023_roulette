@@ -1,6 +1,7 @@
 FROM node:20-alpine3.16
 COPY backend ./backend
-COPY frontend ./frontend
+COPY mobile ./mobile
+COPY main ./main
 COPY assets ./assets
 WORKDIR ./mobile
 RUN npm install
