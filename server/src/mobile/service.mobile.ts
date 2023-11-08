@@ -1,9 +1,8 @@
 import {ErrorMSG, Success, WebSocket} from "./utils";
-
-require('dotenv').config();
 import axios from 'axios';
 import * as https from "https";
-import e from "express";
+
+require('dotenv').config();
 
 export class ServiceMobile {
 
@@ -47,38 +46,24 @@ export class ServiceMobile {
     }
 
     async doesPlayerExists(userID: string) {
-        console.log("hallo")
         try {
             const res = await axios.get(process.env.API_URL + "/user/" + userID, {httpsAgent: this.agent});
 
-            console.log("a")
-
             return res.status === 200;
         } catch (error) {
-            console.log("b")
             console.error(error)
             return false;
         }
     }
 
-    login(userID: string, ws: WebSocket) {
+    async login(userID: string, ws: WebSocket) {
+        let res = await axios.get(process.env.API_URL + "/user/points/" + userID, {httpsAgent: this.agent});
+        let money = res.data;
+
+        this.playerData.set(userID, {money: money, ws: ws, active: false});
+
         if (!this.items.has(userID)) {
             this.items.set(userID, this.initItems());
-
-            axios.get(process.env.API_URL + "/user/points/" + userID, {httpsAgent: this.agent})
-                .then(
-                    res => {
-                        let money = res.data;
-
-                        this.playerData.set(userID, {money: money, ws: ws, active: false});
-                    })
-                .catch(
-                    error => {
-                        console.error("Fehler: " + error)
-                    }
-                )
-        } else {
-            this.playerData.set(userID, {money: this.playerData.get(userID)!.money, ws: ws, active: false})
         }
     }
 
@@ -217,7 +202,7 @@ export class ServiceMobile {
     }
 
 
-    payout(userID: string, number: number) {
+    async payout(userID: string, number: number) {
         for (let value of this._items.get(userID)!.values()) {
             if (value.jetonAmount == 0) continue
             if (!value.values.includes(number)) continue;
@@ -225,44 +210,37 @@ export class ServiceMobile {
             let amount = value.jetonAmount;
             amount += value.jetonAmount * value.payoutFactor;
 
-            this.playerData.get(userID)!.money += amount;
+            await axios.get(process.env.API_URL + "/user/points/change/?userID=" + userID + "&points=" + amount, {httpsAgent: this.agent})
 
-            axios.get(process.env.API_URL + "/user/points/change/?userID=" + userID + "&points=" + amount, {httpsAgent: this.agent})
-                .catch(
-                    error => {
-                        console.error("Fehler: " + error)
-                    }
-                )
+            let res = await axios.get(process.env.API_URL + "/user/points/" + userID, {httpsAgent: this.agent});
+            this.playerData.get(userID)!.money = res.data;
         }
     }
 
-    add(userID: string, itemuserID: string, amount: number) {
+    async add(userID: string, itemName: string, amount: number) {
         if (!this.items.has(userID)) return ErrorMSG.playerNotExists;
-        if (!this.items.get(userID)!.has(itemuserID)) return ErrorMSG.error;
+        if (!this.items.get(userID)!.has(itemName)) return ErrorMSG.error;
         if (this.getMoneyOfPlayer(userID) < amount) return ErrorMSG.notEnoughMoney;
 
-        this.items.get(userID)!.get(itemuserID)!.jetonAmount += amount;
-        this.playerData.get(userID)!.money -= amount;
+        this.items.get(userID)!.get(itemName)!.jetonAmount += amount;
         this.playerData.get(userID)!.active = true;
 
-        axios.get(process.env.API_URL + "/user/points/change/?userID=" + userID + "&points=" + -amount, {httpsAgent: this.agent})
-            .catch(
-                error => {
-                    console.error("Fehler: " + error)
-                }
-            )
+        await axios.get(process.env.API_URL + "/user/points/change/?userID=" + userID + "&points=" + -amount, {httpsAgent: this.agent});
+
+        let res = await axios.get(process.env.API_URL + "/user/points/" + userID, {httpsAgent: this.agent});
+        this.playerData.get(userID)!.money = res.data;
 
         if (this.serverWS != undefined)
-            this.itemToMain(itemuserID, amount);
+            this.itemToMain(itemName, amount);
 
         return Success.success;
     }
 
-    private itemToMain(itemuserID: string, amount: number) {
-        this.serverWS.emit("table", {jetons: amount, itemuserID: itemuserID})
+    private itemToMain(itemName: string, amount: number) {
+        this.serverWS.emit("table", {jetons: amount, itemName: itemName})
     }
 
-    delete(userID: string) {
+    async delete(userID: string) {
         if (!this.items.has(userID)) return ErrorMSG.playerNotExists;
 
         if (this.serverWS != undefined) {
@@ -276,14 +254,11 @@ export class ServiceMobile {
             value.jetonAmount = 0;
         }
 
-        axios.get(process.env.API_URL + "/user/points/change/?userID=" + userID + "&points=" + money, {httpsAgent: this.agent})
-            .catch(
-                error => {
-                    console.error("Fehler: " + error)
-                }
-            )
+        await axios.get(process.env.API_URL + "/user/points/change/?userID=" + userID + "&points=" + money, {httpsAgent: this.agent});
 
-        this.playerData.get(userID)!.money += money;
+        let res = await axios.get(process.env.API_URL + "/user/points/" + userID, {httpsAgent: this.agent});
+        this.playerData.get(userID)!.money = res.data;
+
         this.playerData.get(userID)!.active = false;
     }
 
@@ -314,6 +289,8 @@ export class ServiceMobile {
 
             if (this.serverWS != undefined) this.serverWS.emit("number", {randNum: randNum})
 
+            await new Promise(resolve => setTimeout(resolve, 7500));
+
             for (let key of this.items.keys()) {
                 if (!this.playerData.get(key)!.active) continue;
 
@@ -325,7 +302,7 @@ export class ServiceMobile {
                 this.playerData.get(key)!.ws.emit("payOut", this.playerData.get(key)!.money)
             }
 
-            await new Promise(resolve => setTimeout(resolve, 20000));
+            await new Promise(resolve => setTimeout(resolve, 8000));
 
             for (let key of this.items.keys()) {
                 if (!this.playerData.get(key)!.active) continue;

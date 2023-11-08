@@ -31,15 +31,18 @@ export class RouterMobile {
 
         this.app.get("/user/:userID", async (req, res) => {
             let userID = req.params.userID;
+            console.log("anfrage")
             console.log(userID)
 
             let response = await ServiceMobile.getInstanz().doesPlayerExists(userID);
 
+            console.log("bool: " + response)
+
             if (response) {
-                res.status(200);
+                res.status(200).send({msg: "accepted"});
                 res.end()
             } else {
-                res.status(401).send("user does not exist")
+                res.status(401).send({msg: "user does not exist"})
                 res.end()
             }
         })
@@ -62,9 +65,9 @@ export class RouterMobile {
                 //todo on connect send fullMap
             })
 
-            ws.on("initData", (userID: { userID: string }) => {
-                console.log(userID)
-                ServiceMobile.getInstanz().login(userID.userID, ws);
+            ws.on("initData", async (userID: { userID: string }) => {
+                console.log(userID.userID);
+                await ServiceMobile.getInstanz().login(userID.userID, ws);
 
                 ws.emit("startData", ({
                     money: ServiceMobile.getInstanz().getMoneyOfPlayer(userID.userID),
@@ -73,15 +76,16 @@ export class RouterMobile {
                 }));
             })
 
-            ws.on("delete", (userID: string) => {
+            ws.on("delete", async (userID: string) => {
                 console.log("del")
-                ServiceMobile.getInstanz().delete(userID);
+                await ServiceMobile.getInstanz().delete(userID);
 
                 ws.emit("deleted", (ServiceMobile.getInstanz().getMoneyOfPlayer(userID)))
             })
 
-            ws.on("add", (data: { userID: string, itemName: string, amount: number }) => {
-                let status = ServiceMobile.getInstanz().add(data.userID, data.itemName, data.amount);
+            ws.on("add", async (data: { userID: string, itemName: string, amount: number }) => {
+                let status = await ServiceMobile.getInstanz().add(data.userID, data.itemName, data.amount);
+
 
                 if (status == ErrorMSG.notEnoughMoney) ws.emit("error", ErrorMSG.notEnoughMoney);
                 if (status == ErrorMSG.error) ws.emit("error", ErrorMSG.error);

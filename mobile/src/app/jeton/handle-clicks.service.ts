@@ -20,7 +20,7 @@ export class HandleClicksService {
     }
 
     this.dataService.socket.emit("add", ({
-      name: this.dataService.name,
+      userID: this.dataService.name,
       itemName: numbers.toString(),
       amount: this.dataService.currentJeton
     }))

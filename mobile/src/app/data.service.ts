@@ -14,7 +14,7 @@ export class DataService {
     this.socket.on("joined", (message: { message: string }) => {
       console.log(message.message);
 
-      this.socket.emit("initData", {name: this.name});
+      this.socket.emit("initData", {userID: this.name});
     })
 
     this.socket.on("startData", (data: {money: number, items: any, remainingTime: number}) => {
