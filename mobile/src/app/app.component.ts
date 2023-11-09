@@ -11,6 +11,7 @@ import {environment} from "../environments/environment";
 })
 export class AppComponent implements OnInit {
 
+
   isLandscape: boolean = window.innerWidth > window.innerHeight;
   authorized: boolean = false;
 
