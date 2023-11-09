@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from "../data.service";
 import {HandleClicksService} from "../jeton/handle-clicks.service";
+import {count} from "rxjs";
 
 @Component({
   selector: 'app-coin',
@@ -39,12 +40,13 @@ export class CoinComponent implements OnInit{
     this.dataService.currentJetonImg = "../../assets/jeton" + this.dataService.currentJeton + ".png";
   }
 
+  firstTime: boolean = true;
+
   toggle() {
-    // if (!this.handleClick.betweenBetsEnabled) {
-    //   alert("Achtung! Ab jetzt können Sie auf mehrere Felder setzen. Möglicherweise müssen Sie dafür zoomen. Viel Spaß!")
-    // } else {
-    //   alert("Achtung! Ab jetzt können Sie NICHT mehr auf mehrere Felder setzen. Viel Spaß!")
-    // }
+    if (!this.handleClick.betweenBetsEnabled && this.firstTime) {
+      alert("Achtung! Ab jetzt können Sie auf mehrere Felder setzen. Möglicherweise müssen Sie dafür zoomen. Viel Spaß!")
+      this.firstTime = false;
+    }
     this.handleClick.betweenBetsEnabled = !this.handleClick.betweenBetsEnabled
   }
 }

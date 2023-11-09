@@ -1,4 +1,4 @@
-<div id="center">
+<div id="center" [class.disabled]="dataService.running">
   <div id="outer">
     <div class="outerTable1">
       <div [class.disabled]="dataService.running" class="zero elem" (click)="handleClick.add([0])">

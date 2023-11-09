@@ -27,13 +27,25 @@ button {
   background-color: darkgreen;
 }
 
+.disabled {
+  pointer-events: none;
+}
+
 #inner2 {
-  button {
-    background-color: #e50000;
+  .red {
+       background-color: #e50000;
+     }
+
+  .red:hover {
+    background-color: #c30202;
   }
 
-  button:hover {
-    background-color: #c30202;
+  .blue {
+    background-color: #00adb5;
+  }
+
+  .blue:hover {
+    background-color: #008a92;
   }
 }
 
@@ -97,6 +109,7 @@ button {
     height: 100%;
   }
 }
+
 
 #inner2 {
   width: 30%;

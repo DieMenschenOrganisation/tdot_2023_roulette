@@ -1,6 +1,6 @@
 <div id="outer">
 
-  <div id="inner1">
+  <div id="inner1" [class.disabled]="dataService.running">
     <div class="btnOuter">
       <button class="black" [disabled]="currentJetonIdx == 0" (click)="previous()"><span>-</span></button>
     </div>
@@ -14,30 +14,25 @@
     </div>
   </div>
 
-  <div *ngIf="!dataService.running" class="middle">
-    <div>Verbleibende</div>
-    <div>Zeit</div>
-    <div>{{dataService.remainingTime}} {{formatTime()}}</div>
-  </div>
-
-  <div  *ngIf="dataService.running" class="middle">
-    <div>Spiel</div>
-    <div>läuft..</div>
+  <div class="middle">
+    <div>Jetons</div>
+    <div>{{dataService.currentMoney}}</div>
+    <div *ngIf="!dataService.running">{{dataService.remainingTime}} {{formatTime()}}</div>
+    <div *ngIf="dataService.running">läuft...</div>
   </div>
 
   <div id="inner2">
-    <div class="inner white">
-      <div>Jetons</div>
-      {{dataService.currentMoney}}
-    </div>
-
-    <div class="inner">
+    <div class="inner" [class.disabled]="dataService.running">
       <input type="checkbox" id="switch" (change)="toggle()"/>
       <label for="switch"></label>
     </div>
 
-    <div class="btnOuter">
-      <button (click)="handleClick.delete()" class="active black"><span>x</span></button>
+    <div class="btnOuter2">
+      <button (click)="handleClick.leave()" class="blue"><span>L</span></button>
+    </div>
+
+    <div class="btnOuter" [class.disabled]="dataService.running">
+      <button (click)="handleClick.delete()" class="red"><span>x</span></button>
     </div>
   </div>
 

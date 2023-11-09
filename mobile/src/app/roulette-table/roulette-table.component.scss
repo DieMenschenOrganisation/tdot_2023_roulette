@@ -134,6 +134,10 @@ $border-color: white;
   transform: translate(100%, 100%);
 }
 
+.disabled {
+  pointer-events: none;
+}
+
 .mark {
   border: 1px solid #00adb5;
 }

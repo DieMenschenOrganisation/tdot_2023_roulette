@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {DataService} from "../data.service";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class HandleClicksService {
   betweenBetsEnabled: boolean = false;
   isBetweenBetExistent: boolean = false;
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService, private router: Router) {
     this.dataService.items = this.dataService.getItems();
   }
 
@@ -141,6 +142,9 @@ export class HandleClicksService {
     this.isBetweenBetExistent = false;
   }
 
+  leave() {
+    this.router.navigate(["/"]).then(() => {window.location.href = 'https://casino.schuelerprojekte.online';});
+  }
 }
 
 export type Item = {
