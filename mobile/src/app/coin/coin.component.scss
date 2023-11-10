@@ -1,3 +1,13 @@
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon {
+  max-height: 100%;
+}
+
 button {
   height: 40px;
   width: 40px;

@@ -27,12 +27,12 @@
       <label for="switch"></label>
     </div>
 
-    <div class="btnOuter2">
-      <button (click)="handleClick.leave()" class="blue"><span>L</span></button>
+    <div class="btnOuter" [class.disabled]="dataService.running">
+      <button (click)="handleClick.delete()" class="red icon-container"><img class="icon" src="assets/delete.svg" alt="delete"></button>
     </div>
 
-    <div class="btnOuter" [class.disabled]="dataService.running">
-      <button (click)="handleClick.delete()" class="red"><span>X</span></button>
+    <div class="btnOuter2">
+      <button (click)="handleClick.leave()" class="blue icon-container"><img class="icon" src="assets/leave.svg" alt="leave"></button>
     </div>
   </div>
 
